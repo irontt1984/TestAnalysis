@@ -9,18 +9,18 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
 :root{
-  --bg: #f5f7fb;       /* 화사하고 시원한 연한 블루그레이 바탕 */
-  --bg2: #ffffff;      /* 카드 및 주요 콘텐츠 박스 (순백색) */
-  --bg3: #e4e9f2;      /* 리스트나 호버 시 강조되는 연한 회색 */
-  --bg4: #edf1f7;      /* 입력창 및 코드 영역 배경 */
-  --accent: #ff007f;   /* ★비비드 포인트: 쨍한 네온 핫핑크 */
-  --green: #00d97e;    /* ★비비드 포인트: 싱그러운 에메랄드 그린 */
-  --red: #ff3366;      /* ★비비드 포인트: 강렬한 비비드 레드 */
-  --amber: #ffaa00;    /* ★비비드 포인트: 선명한 오렌지 옐로우 */
-  --text: #192038;     /* 밝은 배경에서 글씨가 잘 보이도록 진한 네이비 */
-  --text2: #65758e;    /* 부가 설명용 세련된 슬레이트 그레이 */
-  --border: rgba(0, 0, 0, 0.08); /* 깔끔하고 가벼운 경계선 */
-  --borderB: rgba(255, 0, 127, 0.25); /* 핫핑크 포인트가 들어간 테두리 */
+  --bg: #f5f7fb;       
+  --bg2: #ffffff;      
+  --bg3: #e4e9f2;      
+  --bg4: #edf1f7;      
+  --accent: #ff007f;   
+  --green: #00d97e;    
+  --red: #ff3366;      
+  --amber: #ffaa00;    
+  --text: #192038;     
+  --text2: #65758e;    
+  --border: rgba(0, 0, 0, 0.08); 
+  --borderB: rgba(255, 0, 127, 0.25); 
   --mono: 'Space Mono', monospace;
   --sans: 'Noto Sans KR', sans-serif;
   --r: 10px;}
@@ -85,11 +85,6 @@ header{position:relative;z-index:50;flex-shrink:0;display:flex;align-items:cente
 .fg input,.fg select,.fg textarea{background:var(--bg4);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-size:12px;font-family:var(--sans);outline:none;transition:border-color .18s;width:100%}
 .fg textarea{min-height:90px;resize:vertical;line-height:1.55;font-family:var(--sans)}
 .fg textarea.tall{min-height:130px}
-.safe-note{margin-top:10px;padding:10px 12px;border:1px solid var(--borderB);border-radius:8px;background:rgba(0,212,255,.055);color:var(--text2);font-size:11px;line-height:1.65}
-.safe-note b{color:var(--accent)}
-.report-box{white-space:pre-wrap;background:var(--bg4);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:12px;line-height:1.65;max-height:190px;overflow:auto;margin-top:8px}
-.report-details{margin-top:8px;border:1px solid var(--border);border-radius:8px;background:rgba(255,255,255,.025);padding:8px 10px}
-.report-details summary{cursor:pointer;color:var(--accent);font-size:12px;font-weight:700}
 .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--borderB)}
 .fg select option{background:var(--bg2)}
 .pww{position:relative}.pww input{padding-right:30px}
@@ -187,7 +182,6 @@ header{position:relative;z-index:50;flex-shrink:0;display:flex;align-items:cente
 .dbtn.adev{border:1px solid rgba(0,212,255,.4) !important;background:rgba(0,212,255,.1) !important}
 .dbtn:not(.adev){border:1px solid rgba(255,255,255,.08);background:transparent}
 
-/* 게시판 전용 추가 스타일 커스텀 */
 .board-tr-hover{transition:background-color .15s ease;}
 .board-tr-hover:hover{background:var(--bg3) !important;}
 
@@ -200,6 +194,7 @@ header{position:relative;z-index:50;flex-shrink:0;display:flex;align-items:cente
   .search-wrap input,.search-wrap input:focus{width:100%}.search-wrap{flex:1}
   .gg{grid-template-columns:1fr 1fr}.modal{max-height:95vh;border-radius:10px}.mbody{min-height:260px}
 }@media(max-width:400px){.gg{grid-template-columns:1fr}}
+
 .report-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:360;align-items:center;justify-content:center;padding:18px}
 .report-bg.on{display:flex}
 .report-box{width:min(920px,94vw);max-height:86vh;background:var(--bg2);border:1px solid var(--borderB);border-radius:14px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 18px 60px rgba(0,0,0,.45)}
@@ -216,100 +211,67 @@ header{position:relative;z-index:50;flex-shrink:0;display:flex;align-items:cente
 .prompt-head p{font-size:12px;color:var(--text2);margin-top:5px;line-height:1.5}
 .prompt-body{padding:18px;overflow:auto;white-space:pre-wrap;line-height:1.75;font-size:13px;color:var(--text);background:var(--bg4)}
 .prompt-foot{display:flex;justify-content:flex-end;gap:8px;padding:12px 18px;border-top:1px solid var(--border);background:var(--bg3);flex-wrap:wrap}
-/* ===== Theme toggle: light mode ===== */
+
 body.light-mode{
-  --bg:#f4f7fb;
-  --bg2:#ffffff;
-  --bg3:#edf2f7;
-  --bg4:#f8fafc;
-  --text:#172033;
-  --text2:#64748b;
-  --muted:#7b8797;
-  --border:#d8e1ec;
-  --borderB:#b8c7d9;
-  --card:#ffffff;
-  --accent:#0284c7;
-  --accent2:#7c3aed;
-  background:#f4f7fb;
-  color:var(--text);
-}body.light-mode .topbar,
-body.light-mode .panel-head,
-body.light-mode .modal-head,
-body.light-mode .modal-actions,
+  --bg: #f4f7fb;
+  --bg2: #ffffff;
+  --bg3: #edf2f7;
+  --bg4: #f8fafc;
+  --text: #172033;
+  --text2: #64748b;
+  --border: #d8e1ec;
+  --borderB: #b8c7d9;
+  background: #f4f7fb;
+  color: var(--text);
+}
+body.light-mode header,
+body.light-mode .ph,
+body.light-mode .mhd,
+body.light-mode .mft,
+body.light-mode .ef,
 body.light-mode .report-head,
 body.light-mode .report-foot,
 body.light-mode .prompt-head,
-body.light-mode .prompt-foot{
-  background:#edf2f7;
-  border-color:#d8e1ec;
-}body.light-mode textarea,
-body.light-mode input,
-body.light-mode select{
-  background:#ffffff!important;
-  color:#172033!important;
-  border-color:#cbd5e1!important;
-}body.light-mode .card,
-body.light-mode .panel,
-body.light-mode .modal-box,
-body.light-mode .report-box,
-body.light-mode .prompt-box{
-  background:#ffffff;
-  border-color:#d8e1ec;
-  color:#172033;
-}body.light-mode .preview,
-body.light-mode .editor,
-body.light-mode .codebox,
+body.light-mode .prompt-foot {
+  background: #edf2f7;
+  border-color: #d8e1ec;
+}
+body.light-mode #code-input,
 body.light-mode .report-body,
-body.light-mode .prompt-body{
-  background:#f8fafc!important;
-  color:#172033!important;
-}body.light-mode .grid-bg{
-  background-image:
-    linear-gradient(rgba(15,23,42,.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(15,23,42,.045) 1px, transparent 1px)!important;
-}body.light-mode .btn{
-  background:#ffffff;
-  color:#172033;
-  border-color:#cbd5e1;
-}body.light-mode .btn:hover{
-  background:#f1f5f9;
-}body.light-mode .chip,
-body.light-mode .tab,
-body.light-mode .pill{
-  background:#e8eef7;
-  color:#334155;
-  border-color:#cbd5e1;
-}body.light-mode iframe{
-  background:#ffffff;
-}body.light-mode .empty,
-body.light-mode .muted,
-body.light-mode small{
-  color:#64748b!important;
-}body.light-mode .theme-toggle{
-  background:#ffffff;
-  border-color:#cbd5e1;
-  color:#172033;
-}.theme-toggle{
-  white-space:nowrap;
-/* --- 글자 크기 1.5배 확대 스크립트 --- */
-body, p, span, a, li, td, th, input, textarea, button, select {
-  font-size: 1.5rem !important;
-  /* 기본 본문 글자 크기를 1.5배로 고정 */
+body.light-mode .prompt-body {
+  background: #f8fafc!important;
+  color: #172033!important;
 }
-
-/* 제목들은 본문보다 더 커야 하므로 비율에 맞춰 조정 */
-h1 { font-size: 3.0rem !important;
+body.light-mode .panel,
+body.light-mode .modal,
+body.light-mode .card,
+body.light-mode .report-box,
+body.light-mode .prompt-box {
+  background: #ffffff;
+  border-color: #d8e1ec;
 }
-h2 { font-size: 2.5rem !important; }
-h3 { font-size: 2.0rem !important; }
-h4 { font-size: 1.75rem !important;
+body.light-mode input,
+body.light-mode select,
+body.light-mode textarea {
+  background: #ffffff!important;
+  color: #172033!important;
+  border-color: #cbd5e1!important;
 }
-
-/* 아이콘이나 작은 배지류도 동반 상승 */
-.badge, .tag, i, small {
-  font-size: 1.2rem !important;
+body.light-mode .chip,
+body.light-mode .fbtn {
+  background: #e8eef7;
+  color: #334155;
+  border-color: #cbd5e1;
 }
-}</style>
+body.light-mode .btn {
+  background: #ffffff;
+  color: #172033;
+  border-color: #cbd5e1;
+}
+body.light-mode .btn:hover {
+  background: #f1f5f9;
+}
+</style>
 </head>
 <body>
 <header>
@@ -319,29 +281,29 @@ h4 { font-size: 1.75rem !important;
   </div>
   <div class="hright">
     <div class="nav-tabs">
-      <button class="nav-tab active" id="ntab-runner" onclick="sp('runner',this)">&#9889; 실험 실행기</button>
-      <button class="nav-tab" id="ntab-gallery" onclick="sp('gallery',this)">&#128300; 갤러리</button>
+      <button class="nav-tab active" id="ntab-runner" onclick="sp('runner',this)">⚡ 실험 실행기</button>
+      <button class="nav-tab" id="ntab-gallery" onclick="sp('gallery',this)">🔬 갤러리</button>
       <button class="nav-tab" id="ntab-board" onclick="sp('board',this)">📋 게시판</button>
       <button class="btn theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="라이트모드로 전환">☀ 라이트모드</button>
     </div>
-    <button class="ham" onclick="toggleMob()">&#9776;</button>
+    <button class="ham" onclick="toggleMob()">☰</button>
     <div style="display:flex;align-items:center;gap:4px">
-      <button class="dbtn adev" id="dbtn-pc" onclick="setDevice('pc')" title="PC">&#128187;</button>
-      <button class="dbtn" id="dbtn-tablet" onclick="setDevice('tablet')" title="태블릿">&#9727;</button>
-      <button class="dbtn" id="dbtn-mobile" onclick="setDevice('mobile')" title="모바일">&#128241;</button>
+      <button class="dbtn adev" id="dbtn-pc" onclick="setDevice('pc')" title="PC">💻</button>
+      <button class="dbtn" id="dbtn-tablet" onclick="setDevice('tablet')" title="태블릿">▱</button>
+      <button class="dbtn" id="dbtn-mobile" onclick="setDevice('mobile')" title="모바일">📱</button>
     </div>
     <div style="display:flex;align-items:center;gap:6px">
-      <button class="btn" id="admin-login-btn" onclick="adminLogin()" style="font-size:11px">&#128274; 관리자</button>
+      <button class="btn" id="admin-login-btn" onclick="adminLogin()" style="font-size:11px">🔒 관리자</button>
       <div id="admin-badge" style="display:none;align-items:center;gap:6px;background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.3);border-radius:8px;padding:5px 10px">
-        <span style="font-size:11px;color:#f87171;font-family:var(--mono)">&#128308; 관리자</span>
+        <span style="font-size:11px;color:#f87171;font-family:var(--mono)">🔴 관리자</span>
         <button class="btn bdanger" onclick="adminLogout()" style="font-size:10px;padding:3px 7px">로그아웃</button>
       </div>
     </div>
   </div>
 </header>
 <div class="mob-nav" id="mob-nav">
-  <button class="nav-tab active" onclick="sp('runner',this);closeMob()">&#9889; 실험 실행기</button>
-  <button class="nav-tab" onclick="sp('gallery',this);closeMob()">&#128300; 갤러리</button>
+  <button class="nav-tab active" onclick="sp('runner',this);closeMob()">⚡ 실험 실행기</button>
+  <button class="nav-tab" onclick="sp('gallery',this);closeMob()">🔬 갤러리</button>
   <button class="nav-tab" onclick="sp('board',this);closeMob()">📋 게시판</button>
 </div>
 
@@ -357,10 +319,10 @@ h4 { font-size: 1.75rem !important;
             <button class="btn" style="font-size:10px;padding:5px 9px" id="cpbtn" onclick="copyCode()">복사</button>
           </div>
         </div>
-        <textarea id="code-input" spellcheck="false" onkeydown="hkey(event)" placeholder="여기에 HTML 코드를 붙여넣으세요. AI에게 이렇게 요청해보세요: &apos;단진자 운동 시뮬레이션을 HTML로 만들어줘.&apos; 조건을 구체적으로 추가할수록 의도한 시뮬레이션에 더 가까워져요. &apos;단진자 운동 시뮬레이션을 HTML로 만들어줘. - 슬라이더로 진자 길이와 초기 각도를 조절할 수 있게 해줘 - 주기 T를 실시간으로 화면에 표시해줘 - 다크 배경, 파란색 진자로 만들어줘&apos; 실행 결과가 마음에 안 들면 조건을 바꿔서 다시 요청해보세요!"></textarea>
+        <textarea id="code-input" spellcheck="false" onkeydown="hkey(event)" placeholder="여기에 HTML 코드를 붙여넣으세요. AI에게 이렇게 요청해보세요: '단진자 운동 시뮬레이션을 HTML로 만들어줘.' 조건을 구체적으로 추가할수록 의도한 시뮬레이션에 더 가까워져요. 실행 결과가 마음에 안 들면 조건을 바꿔서 다시 요청해보세요!"></textarea>
         <div class="ef">
-          <span class="hint">Ctrl+Enter &middot; 실행 &nbsp;|&nbsp; Tab &middot; 들여쓰기</span>
-          <button class="btn brun" onclick="runCode()">&#9654; 실행</button>
+          <span class="hint">Ctrl+Enter · 실행 | Tab · 들여쓰기</span>
+          <button class="btn brun" onclick="runCode()">▶ 실행</button>
         </div>
       </div>
       <div class="panel">
@@ -368,22 +330,22 @@ h4 { font-size: 1.75rem !important;
           <div class="pl"><div class="dot dp"></div>PREVIEW</div>
           <div style="display:flex;gap:5px;align-items:center">
             <span id="rs"></span>
-            <button class="btn" style="font-size:10px;padding:5px 9px" onclick="reloadPv()">&#8635;</button>
-            <button class="btn" style="font-size:10px;padding:5px 9px" onclick="openFs()">&#10610; 전체화면</button>
-            <button class="btn bup" onclick="toggleUp()">&#8593; 갤러리에 올리기</button>
+            <button class="btn" style="font-size:10px;padding:5px 9px" onclick="reloadPv()">↻</button>
+            <button class="btn" style="font-size:10px;padding:5px 9px" onclick="openFs()">🗖 전체화면</button>
+            <button class="btn bup" onclick="toggleUp()">↑ 갤러리에 올리기</button>
           </div>
         </div>
         <div class="pv-inner">
-          <div class="pv-ph" id="pvph"><div class="ei">&#9883;</div><p>코드를 입력하고<br>[&#9654; 실행]을 눌러주세요</p></div>
+          <div class="pv-ph" id="pvph"><div class="ei">⚛</div><p>코드를 입력하고<br>[▶ 실행]을 눌러주세요</p></div>
           <iframe id="preview-frame" sandbox="allow-scripts allow-same-origin allow-modals allow-forms allow-popups allow-downloads"></iframe>
         </div>
-        <div class="pv-foot"><span style="font-family:var(--mono);font-size:10px;color:var(--text2);opacity:.3">sandbox &middot; 안전 실행 환경</span></div>
+        <div class="pv-foot"><span style="font-family:var(--mono);font-size:10px;color:var(--text2);opacity:.3">sandbox · 안전 실행 환경</span></div>
       </div>
     </div>
   </div>
   <div class="us" id="us">
     <div class="ui">
-      <div class="utr"><h3>// 갤러리 업로드</h3><button class="btn" style="font-size:10px;padding:4px 9px" onclick="toggleUp()">&#10005; 닫기</button></div>
+      <div class="utr"><h3>// 갤러리 업로드</h3><button class="btn" style="font-size:10px;padding:4px 9px" onclick="toggleUp()">✕ 닫기</button></div>
       <div class="ug">
         <div class="fg"><label>시뮬레이션 제목 *</label><input id="utitle" type="text" placeholder="예) 단진자 운동 시뮬레이션"></div>
         <div class="fg"><label>작성자 이름</label><input id="uauthor" type="text" placeholder="예) 홍길동"></div>
@@ -471,8 +433,7 @@ h4 { font-size: 1.75rem !important;
               <th style="padding: 10px 5px; width: 150px;">날짜</th>
             </tr>
           </thead>
-          <tbody id="board-list-tbody">
-            </tbody>
+          <tbody id="board-list-tbody"></tbody>
         </table>
       </div>
     </div>
@@ -536,7 +497,7 @@ h4 { font-size: 1.75rem !important;
         <textarea id="board-content" style="min-height: 150px; height: 180px;" placeholder="내용을 입력하세요"></textarea>
       </div>
       <div class="fg">
-        <label>비밀번호 (비밀글 원할 시 설정)</label>
+        <label>비밀번호 (비밀글 원할 시 입력)</label>
         <input type="password" id="board-pw" placeholder="설정 시 암호 입력 혹은 관리자만 열람 가능">
       </div>
       <div class="fg">
@@ -565,7 +526,6 @@ h4 { font-size: 1.75rem !important;
     </div>
     <div style="padding: 20px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; min-height: 200px; color: var(--text);">
       <div id="v-board-content" style="white-space: pre-wrap; line-height: 1.6; font-size: 14px; word-break: break-all;"></div>
-      
       <div id="v-board-file-zone" style="margin-top: 15px; padding: 10px; background: var(--bg4); border-radius: 6px; border: 1px solid var(--border); display: none;">
         <span style="font-size: 11px; color: var(--text2);">📎 첨부파일 링크:</span>
         <a id="v-board-file-link" href="#" download="" style="font-size: 13px; color: var(--accent); margin-left: 5px; text-decoration: underline; font-weight: bold;">파일명</a>
@@ -580,6 +540,7 @@ h4 { font-size: 1.75rem !important;
     </div>
   </div>
 </div>
+
 <div class="qr-bg" id="qrbg" onclick="if(event.target===this)this.classList.remove('on')">
   <div class="qr-box">
     <h3 id="qrt">QR Code</h3>
@@ -601,7 +562,6 @@ h4 { font-size: 1.75rem !important;
 </div>
 
 <script>
-// 기본 물리 고정 시뮬레이션 목록 데이터
 const def=[
 {id:"d1",title:"단진자 운동 시뮬레이션",author:"물리쌤 최태현",tag:"역학",desc:"진자의 길이와 중력 가속도를 변경하며 주기의 변화를 실시간 그래프로 추적하는 정밀 실험 시뮬레이션입니다.",views:420,date:"2025-01-10",code:`<!DOCTYPE html><html><head><style>body{background:#0f172a;color:#fff;font-family:sans-serif;text-align:center;padding:20px}canvas{background:#1e293b;border-radius:10px;box-shadow:0 10px 25px rgba(0,0,0,0.5)}input{width:160px;margin:0 10px}.val{color:#38bdf8;font-weight:bold}</style></head><body><h3>단진자 시뮬레이션 (Pendulum)</h3><canvas id="c" width="500" height="320"></canvas><div style="margin-top:15px">길이 (L): <input type="range" id="len" min="50" max="200" value="120"> <span id="lv" class="val">120</span><br>중력 (g): <input type="range" id="grv" min="5" max="25" value="9.8" step="0.1"> <span id="gv" class="val">9.8</span></div><p style="font-size:13px;color:#94a3b8">이론 주기 T = 2&pi;&radic;(L/g) &asymp; <span id="period" style="color:#f43f5e"></span>초</p><script>const canvas=document.getElementById('c'),ctx=canvas.getContext('2d'),L=document.getElementById('len'),G=document.getElementById('grv');let angle=Math.PI/4,v=0,a=0;function draw(){ctx.clearRect(0,0,500,320);let length=parseFloat(L.value),g=parseFloat(G.value);document.getElementById('lv').innerText=length;document.getElementById('gv').innerText=g;document.getElementById('period').innerText=(2*Math.PI*Math.sqrt(length/100/g)).toFixed(2);a=(-1*g/length)*Math.sin(angle);v+=a;v*=0.999;angle+=v;let x=250+length*Math.sin(angle),y=40+length*Math.cos(angle);ctx.strokeStyle='#64748b';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(250,40);ctx.lineTo(x,y);ctx.stroke();ctx.fillStyle='#38bdf8';ctx.beginPath();ctx.arc(x,y,16,0,Math.PI*2);ctx.fill();requestAnimationFrame(draw)}draw();<\/script></body></html>`},
 {id:"d2",title:"파동의 간섭 및 중첩",author:"물리쌤 최태현",tag:"파동",desc:"두 개의 서로 다른 파동원에서 일어나는 수면파 파동의 상쇄 간섭과 보강 간섭 평면 시각화 장치입니다.",views:312,date:"2025-01-12",code:`<!DOCTYPE html><html><head><style>body{background:#0f172a;color:#fff;font-family:sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;height:90vh;margin:0}canvas{background:#000;border:1px solid #334155;border-radius:8px}</style></head><body><h4 style="margin:5px">수면파의 간섭 (Wave Interference)</h4><canvas id="canvas" width="400" height="260"></canvas><p style="font-size:12px;color:#94a3b8;margin:5px">두 파원으로부터의 거리에 따른 보강/상쇄 간섭 체크</p><script>const canvas=document.getElementById('canvas'),ctx=canvas.getContext('2d'),w=400,h=260;let t=0;function animate(){t+=0.15;const imgData=ctx.createImageData(w,h);for(let y=0;y<h;y++){for(let x=0;x<w;x++){let d1=Math.sqrt((x-140)**2+(y-130)**2),d2=Math.sqrt((x-260)**2+(y-130)**2);let v1=Math.sin(d1*0.2-t),v2=Math.sin(d2*0.2-t);let amp=(v1+v2)*0.5;let idx=(x+y*w)*4;let color=Math.floor((amp+1)*127.5);imgData.data[idx]=color*0.2;imgData.data[idx+1]=color*0.6;imgData.data[idx+2]=color;imgData.data[idx+3]=255}}ctx.putImageData(imgData,0,0);requestAnimationFrame(animate)}animate();<\/script></body></html>`},
@@ -664,7 +624,6 @@ function sp(p,btn){
     if(pbtn)pbtn.classList.add("active");
   }
   if(p==='gallery')bld();
-  // 탭 이동 시 게시판 리스트 동적 리렌더링 호출
   if(p==='board')renderBoardList();
 }
 
@@ -678,12 +637,10 @@ function toggleTheme(){
   if(b.classList.contains("light-mode")){
     b.classList.remove("light-mode");
     t.innerText="☀ 라이트모드";
-    t.title="라이트모드로 전환";
     tm="dark";
   }else{
     b.classList.add("light-mode");
     t.innerText="🌙 다크모드";
-    t.title="다크모드로 전환";
     tm="light";
   }
   try{localStorage.setItem("rp_theme",tm)}catch(e){}
@@ -793,15 +750,23 @@ function mqr(){
   document.getElementById("qrbg").classList.add("on");
 }
 
+function loadEx(type){
+  if(type==='pendulum') document.getElementById("code-input").value=def[0].code;
+  if(type==='wave') document.getElementById("code-input").value=def[1].code;
+  if(type==='thermo') document.getElementById("code-input").value=def[2].code;
+  if(type==='ohm') document.getElementById("code-input").value=`<!DOCTYPE html><html><head><style>body{background:#111;color:#fff;text-align:center;font-family:sans-serif;padding:10px}input{width:140px;margin:8px}</style></head><body><h4>옴의 법칙 가상 실험 (Ohm's Law)</h4><p>전압(V) = 전류(I) &times; 저항(R)</p><div>전압: <input type="range" id="v" min="1" max="24" value="12"> <span id="vv">12</span> V</div><div>저항: <input type="range" id="r" min="1" max="100" value="20"> <span id="rv">20</span> &Omega;</div><h3 style="color:#00d97e;margin-top:20px">측정 전류(I) = <span id="iv">0.60</span> A</h3><script>const V=document.getElementById('v'),R=document.getElementById('r');function calc(){let v=parseFloat(V.value),r=parseFloat(R.value);document.getElementById('vv').innerText=v;document.getElementById('rv').innerText=r;document.getElementById('iv').innerText=(v/r).toFixed(2)}V.oninput=calc;R.oninput=calc;<\/script></body></html>`;
+  if(type==='lens') document.getElementById("code-input").value=`<!DOCTYPE html><html><head><style>body{background:#000;color:#fff;text-align:center;margin:0;overflow:hidden}canvas{background:#111;display:block;margin:10px auto;border:1px solid #334155}</style></head><body><h5 style="margin:5px;color:#a78bfa">볼록렌즈 광선 굴절 추적 (Lens Ray Tracing)</h5><canvas id="l" width="480" height="220"></canvas><p style="font-size:11px;color:#64748b;margin:0">마우스를 움직여 광선의 입사각 위치를 실시간 추적하세요</p><script>const c=document.getElementById('l'),ctx=c.getContext('2d');let my=110;c.onmousemove=(e)=>{const rect=c.getBoundingClientRect();my=e.clientY-rect.top};function draw(){ctx.clearRect(0,0,480,220);ctx.strokeStyle='#334155';ctx.beginPath();ctx.moveTo(0,110);ctx.lineTo(480,110);ctx.stroke();ctx.fillStyle='rgba(14,165,233,0.2)';ctx.strokeStyle='#0ea5e9';ctx.beginPath();ctx.arc(240,-190,300,0.4,Math.PI-0.4);ctx.arc(240,410,300,Math.PI+0.4,-0.4);ctx.fill();ctx.stroke();ctx.strokeStyle='#ff007f';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(10,my);ctx.lineTo(235,my);let f=120,dx=235-240;let dy=my-110;let nx=470,ny=110-dy;ctx.lineTo(245,my);ctx.lineTo(360,110);ctx.lineTo(470,110-(110-my)*(-1));ctx.stroke();requestAnimationFrame(draw)}draw();<\/script></body></html>`;
+  reloadPv();
+}
+
 let adm=false;
 function adminLogin(){
   const p=prompt("🔐 관리자 승인 패스워드를 입력하세요:");
-  if(p==="1234"){ // 예시 비밀번호 1234
+  if(p==="434582"){ 
     adm=true;
     document.getElementById("admin-login-btn").style.display="none";
     document.getElementById("admin-badge").style.display="flex";
     alert("👨‍🏫 최태현 선생님 관리자 모드로 로그인 연동되었습니다.");
-    // 게시판 리스트 갱신 호출 (관리자 프리패스 상태 즉시 시각화 적용)
     if(document.getElementById("page-board").classList.contains("active")) renderBoardList();
   }else if(p!==null){
     alert("인증 실패: 올바른 암호가 아닙니다.");
@@ -848,22 +813,9 @@ function opw(){
   }
 }
 
-// URL 파라미터 체크 외부 공유 랜딩 로직
-(function(){
-  const p=new URLSearchParams(window.location.search);
-  const sim=p.get("sim");
-  if(sim){setTimeout(()=>{viewItem(sim)},600)}
-  const saved=localStorage.getItem("rp_theme")||"dark";
-  if(document.readyState==="loading"){
-    document.addEventListener("DOMContentLoaded",function(){if(saved==="light")toggleTheme()});
-  }else{if(saved==="light")toggleTheme()}
-})();
-
-
-// ==================== [자유 게시판 비즈니스 기능 스크립트 추가] ====================
+// ==================== [자유 게시판 데이터 핸들링 로직 - 디버깅 완료] ====================
 let boardPosts = [];
 
-// 로컬스토리지로부터 게시글 로딩
 function loadBoardPosts() {
   try {
     const saved = localStorage.getItem("physics_board_posts");
@@ -873,12 +825,10 @@ function loadBoardPosts() {
   }
 }
 
-// 로컬스토리지 저장 처리
 function saveBoardPostsToStorage() {
   localStorage.setItem("physics_board_posts", JSON.stringify(boardPosts));
 }
 
-// 게시판 목록 동적 빌드 출력 처리
 function renderBoardList() {
   const tbody = document.getElementById("board-list-tbody");
   if (!tbody) return;
@@ -889,39 +839,37 @@ function renderBoardList() {
     return;
   }
 
-  // 최신글이 최상단에 보여지도록 배열 역순 정렬 가상화
-  const displayPosts = [...boardPosts].reverse();
-
-  displayPosts.forEach((post, index) => {
-    const actualIndex = boardPosts.length - 1 - index; // 실제 원본배열 삭제 추적 타겟 인덱스
+  // 역순 출력 루프 처리
+  for (let i = boardPosts.length - 1; i >= 0; i--) {
+    const post = boardPosts[i];
     const isSecret = post.password && post.password.trim() !== "";
-    
-    // 비밀글 상태 표시 제어 (관리자 인증이면 제목 훔쳐보기 허용 기믹 가능하나 일반적으론 명시 우선)
     const titleDisplay = isSecret ? `🔒 비밀글입니다.` : post.title;
     
     const tr = document.createElement("tr");
     tr.style.borderBottom = "1px solid var(--border)";
     tr.style.cursor = "pointer";
     tr.className = "board-tr-hover";
-    tr.onclick = () => viewBoardPost(actualIndex);
+    
+    // ★ 디버깅 포인트: 고정값 i를 정확하게 인수로 바인딩하여 꼬임 방지
+    tr.onclick = (function(idx) {
+      return function() { viewBoardPost(idx); };
+    })(i);
 
     tr.innerHTML = `
-      <td style="padding: 12px 5px; color: var(--text2);">${actualIndex + 1}</td>
+      <td style="padding: 12px 5px; color: var(--text2);">${i + 1}</td>
       <td style="padding: 12px 5px; font-weight: ${isSecret ? 'normal' : '500'};">${titleDisplay}</td>
       <td style="padding: 12px 5px; color: var(--text2);">${post.author}</td>
       <td style="padding: 12px 5px; color: var(--text2); font-size:12px;">${post.date}</td>
     `;
     tbody.appendChild(tr);
-  });
+  }
 }
 
-// 게시글 작성 다이얼로그 제어
 function openBoardWrite() {
   document.getElementById("board-write-modal").classList.add("on");
 }
 function closeBoardWrite() {
   document.getElementById("board-write-modal").classList.remove("on");
-  // 인풋 데이터 리셋
   document.getElementById("board-author").value = "";
   document.getElementById("board-title").value = "";
   document.getElementById("board-content").value = "";
@@ -929,7 +877,6 @@ function closeBoardWrite() {
   document.getElementById("board-file").value = "";
 }
 
-// 새 글 저장 및 파일 Base64 변환 저장 로직
 function saveBoardPost() {
   const author = document.getElementById("board-author").value.trim();
   const title = document.getElementById("board-title").value.trim();
@@ -938,7 +885,7 @@ function saveBoardPost() {
   const fileInput = document.getElementById("board-file");
 
   if (!author || !title || !content) {
-    alert("작성자, 제목, 내용은 필수 기입 필수조건입니다.");
+    alert("작성자, 제목, 내용은 필수 기입 조건입니다.");
     return;
   }
 
@@ -955,26 +902,21 @@ function saveBoardPost() {
     fileName: null
   };
 
-  // 첨부 파일 검증 및 로드 처리
   if (fileInput.files && fileInput.files[0]) {
     const file = fileInput.files[0];
-    
-    // 로컬스토리지 저장 최대 용량 보호 장치 (4MB 제약)
     if (file.size > 4 * 1024 * 1024) {
-      alert("브라우저 로컬 저장소 한계로 인해, 첨부 파일 크기는 4MB 이하만 지원 가능합니다.");
+      alert("파일 크기는 4MB 이하만 지원 가능합니다.");
       return;
     }
-
     const reader = new FileReader();
     reader.onload = function(e) {
       postObj.fileData = e.target.result;
       postObj.fileName = file.name;
-      
       boardPosts.push(postObj);
       saveBoardPostsToStorage();
       renderBoardList();
       closeBoardWrite();
-      alert("게시판에 새 글 작성이 등록되었습니다.");
+      alert("게시판에 새 글이 등록되었습니다.");
     };
     reader.readAsDataURL(file);
   } else {
@@ -982,39 +924,34 @@ function saveBoardPost() {
     saveBoardPostsToStorage();
     renderBoardList();
     closeBoardWrite();
-    alert("게시판에 새 글 작성이 등록되었습니다.");
+    alert("게시판에 새 글이 등록되었습니다.");
   }
 }
 
-// 게시글 단건 상세 열람 제어 (암호 인증 프로세스 및 선생님 프리패스 전용)
 function viewBoardPost(index) {
   const post = boardPosts[index];
-  if (!post) return;
+  if (!post) {
+    alert("해당 게시글을 찾을 수 없습니다.");
+    return;
+  }
 
-  // 관리자 인증 판단 (adm 전역변수 연동 스위치)
-  const isAdmin = adm === true;
-
-  // 비밀번호가 걸려있는 방어된 게시물인지 판별
+  // ★ 관리자(최태현 선생님) 로그인 모드일 경우 비밀번호 프로세스 완전 면제 패스
   if (post.password && post.password.trim() !== "") {
-    if (!isAdmin) {
-      const inputPw = prompt("🔒 비밀글 설정 상태입니다. 열람용 비밀번호를 입력해주세요:");
-      if (inputPw === null) return; // 프롬프트 취소 차단
+    if (!adm) {
+      const inputPw = prompt("🔒 비밀글입니다. 설정하신 비밀번호를 입력해주세요:");
+      if (inputPw === null) return; 
       if (inputPw !== post.password) {
-        alert("비밀번호 인증 실패! 타인의 비밀글은 열람이 불가능합니다.");
+        alert("비밀번호가 일치하지 않아 열람할 수 없습니다.");
         return;
       }
-    } else {
-      alert("[📢 관리자 권한 알림] 최태현 선생님 계정으로 암호 확인 프로세스 없이 비밀글을 프리패스 열람합니다.");
     }
   }
 
-  // 모달 데이터 뷰 맵핑
   document.getElementById("v-board-title").innerText = post.title;
   document.getElementById("v-board-author").innerText = post.author;
   document.getElementById("v-board-date").innerText = post.date;
   document.getElementById("v-board-content").innerText = post.content;
 
-  // 첨부 파일 활성화 노출 바인딩
   const fZone = document.getElementById("v-board-file-zone");
   const fLink = document.getElementById("v-board-file-link");
   if (post.fileData && post.fileName) {
@@ -1026,12 +963,11 @@ function viewBoardPost(index) {
     fZone.style.display = "none";
   }
 
-  // 글 삭제 클릭 이벤트 제어 핸들러
   const delBtn = document.getElementById("v-board-del-btn");
   delBtn.onclick = function() {
-    if (isAdmin || confirm("이 게시글을 정말로 삭제 처리할까요?")) {
-      if (!isAdmin && post.password) {
-        const checkPw = prompt("본인 인증 확인을 위해 설정 암호를 다시 입력해주세요:");
+    if (adm || confirm("이 게시글을 정말로 삭제 처리할까요?")) {
+      if (!adm && post.password) {
+        const checkPw = prompt("본인 확인을 위해 설정 암호를 입력해주세요:");
         if (checkPw !== post.password) {
           alert("비밀번호 불일치로 삭제가 취소되었습니다.");
           return;
@@ -1041,7 +977,7 @@ function viewBoardPost(index) {
       saveBoardPostsToStorage();
       renderBoardList();
       closeBoardView();
-      alert("글이 성공적으로 삭제되었습니다.");
+      alert("글이 정상적으로 삭제되었습니다.");
     }
   };
 
@@ -1052,9 +988,16 @@ function closeBoardView() {
   document.getElementById("v-board-view-modal").classList.remove("on");
 }
 
-// 최초 게시판 상태 초기 구동 호출
-loadBoardPosts();
-// =======================================================================
+(function(){
+  const p=new URLSearchParams(window.location.search);
+  const sim=p.get("sim");
+  if(sim){setTimeout(()=>{viewItem(sim)},600)}
+  const saved=localStorage.getItem("rp_theme")||"dark";
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded",function(){if(saved==="light")toggleTheme()});
+  }else{if(saved==="light")toggleTheme()}
+  loadBoardPosts();
+})();
 </script>
 </body>
 </html>
