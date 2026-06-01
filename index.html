@@ -9,18 +9,18 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
 :root{
-  --bg: #f5f7fb;       
-  --bg2: #ffffff;      
-  --bg3: #e4e9f2;      
-  --bg4: #edf1f7;      
-  --accent: #ff007f;   
-  --green: #00d97e;    
-  --red: #ff3366;      
-  --amber: #ffaa00;    
-  --text: #192038;     
-  --text2: #65758e;    
-  --border: rgba(0, 0, 0, 0.08); 
-  --borderB: rgba(255, 0, 127, 0.25); 
+  --bg: #f5f7fb;       /* 화사하고 시원한 연한 블루그레이 바탕 */
+  --bg2: #ffffff;      /* 카드 및 주요 콘텐츠 박스 (순백색) */
+  --bg3: #e4e9f2;      /* 리스트나 호버 시 강조되는 연한 회색 */
+  --bg4: #edf1f7;      /* 입력창 및 코드 영역 배경 */
+  --accent: #ff007f;   /* ★비비드 포인트: 쨍한 네온 핫핑크 */
+  --green: #00d97e;    /* ★비비드 포인트: 싱그러운 에메랄드 그린 */
+  --red: #ff3366;      /* ★비비드 포인트: 강렬한 비비드 레드 */
+  --amber: #ffaa00;    /* ★비비드 포인트: 선명한 오렌지 옐로우 */
+  --text: #192038;     /* 밝은 배경에서 글씨가 잘 보이도록 진한 네이비 */
+  --text2: #65758e;    /* 부가 설명용 세련된 슬레이트 그레이 */
+  --border: rgba(0, 0, 0, 0.08); /* 깔끔하고 가벼운 경계선 */
+  --borderB: rgba(255, 0, 127, 0.25); /* 핫핑크 포인트가 들어간 테두리 */
   --mono: 'Space Mono', monospace;
   --sans: 'Noto Sans KR', sans-serif;
   --r: 10px;}
@@ -85,6 +85,11 @@ header{position:relative;z-index:50;flex-shrink:0;display:flex;align-items:cente
 .fg input,.fg select,.fg textarea{background:var(--bg4);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-size:12px;font-family:var(--sans);outline:none;transition:border-color .18s;width:100%}
 .fg textarea{min-height:90px;resize:vertical;line-height:1.55;font-family:var(--sans)}
 .fg textarea.tall{min-height:130px}
+.safe-note{margin-top:10px;padding:10px 12px;border:1px solid var(--borderB);border-radius:8px;background:rgba(0,212,255,.055);color:var(--text2);font-size:11px;line-height:1.65}
+.safe-note b{color:var(--accent)}
+.report-box{white-space:pre-wrap;background:var(--bg4);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:12px;line-height:1.65;max-height:190px;overflow:auto;margin-top:8px}
+.report-details{margin-top:8px;border:1px solid var(--border);border-radius:8px;background:rgba(255,255,255,.025);padding:8px 10px}
+.report-details summary{cursor:pointer;color:var(--accent);font-size:12px;font-weight:700}
 .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--borderB)}
 .fg select option{background:var(--bg2)}
 .pww{position:relative}.pww input{padding-right:30px}
@@ -181,10 +186,6 @@ header{position:relative;z-index:50;flex-shrink:0;display:flex;align-items:cente
 .dbtn{font-size:14px;padding:4px 7px;border-radius:6px;cursor:pointer;line-height:1;transition:all .18s}
 .dbtn.adev{border:1px solid rgba(0,212,255,.4) !important;background:rgba(0,212,255,.1) !important}
 .dbtn:not(.adev){border:1px solid rgba(255,255,255,.08);background:transparent}
-
-.board-tr-hover{transition:background-color .15s ease;}
-.board-tr-hover:hover{background:var(--bg3) !important;}
-
 @media(max-width:700px){
   .logo-sub,.nav-tabs{display:none}.ham{display:block}header{padding:10px 16px}
   .rg{grid-template-columns:1fr;height:auto}.rw{padding:10px 12px 0}.panel{height:300px}
@@ -194,7 +195,6 @@ header{position:relative;z-index:50;flex-shrink:0;display:flex;align-items:cente
   .search-wrap input,.search-wrap input:focus{width:100%}.search-wrap{flex:1}
   .gg{grid-template-columns:1fr 1fr}.modal{max-height:95vh;border-radius:10px}.mbody{min-height:260px}
 }@media(max-width:400px){.gg{grid-template-columns:1fr}}
-
 .report-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:360;align-items:center;justify-content:center;padding:18px}
 .report-bg.on{display:flex}
 .report-box{width:min(920px,94vw);max-height:86vh;background:var(--bg2);border:1px solid var(--borderB);border-radius:14px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 18px 60px rgba(0,0,0,.45)}
@@ -211,67 +211,97 @@ header{position:relative;z-index:50;flex-shrink:0;display:flex;align-items:cente
 .prompt-head p{font-size:12px;color:var(--text2);margin-top:5px;line-height:1.5}
 .prompt-body{padding:18px;overflow:auto;white-space:pre-wrap;line-height:1.75;font-size:13px;color:var(--text);background:var(--bg4)}
 .prompt-foot{display:flex;justify-content:flex-end;gap:8px;padding:12px 18px;border-top:1px solid var(--border);background:var(--bg3);flex-wrap:wrap}
-
+/* ===== Theme toggle: light mode ===== */
 body.light-mode{
-  --bg: #f4f7fb;
-  --bg2: #ffffff;
-  --bg3: #edf2f7;
-  --bg4: #f8fafc;
-  --text: #172033;
-  --text2: #64748b;
-  --border: #d8e1ec;
-  --borderB: #b8c7d9;
-  background: #f4f7fb;
-  color: var(--text);
-}
-body.light-mode header,
-body.light-mode .ph,
-body.light-mode .mhd,
-body.light-mode .mft,
-body.light-mode .ef,
+  --bg:#f4f7fb;
+  --bg2:#ffffff;
+  --bg3:#edf2f7;
+  --bg4:#f8fafc;
+  --text:#172033;
+  --text2:#64748b;
+  --muted:#7b8797;
+  --border:#d8e1ec;
+  --borderB:#b8c7d9;
+  --card:#ffffff;
+  --accent:#0284c7;
+  --accent2:#7c3aed;
+  background:#f4f7fb;
+  color:var(--text);
+}body.light-mode .topbar,
+body.light-mode .panel-head,
+body.light-mode .modal-head,
+body.light-mode .modal-actions,
 body.light-mode .report-head,
 body.light-mode .report-foot,
 body.light-mode .prompt-head,
-body.light-mode .prompt-foot {
-  background: #edf2f7;
-  border-color: #d8e1ec;
-}
-body.light-mode #code-input,
-body.light-mode .report-body,
-body.light-mode .prompt-body {
-  background: #f8fafc!important;
-  color: #172033!important;
-}
-body.light-mode .panel,
-body.light-mode .modal,
-body.light-mode .card,
-body.light-mode .report-box,
-body.light-mode .prompt-box {
-  background: #ffffff;
-  border-color: #d8e1ec;
-}
+body.light-mode .prompt-foot{
+  background:#edf2f7;
+  border-color:#d8e1ec;
+}body.light-mode textarea,
 body.light-mode input,
-body.light-mode select,
-body.light-mode textarea {
-  background: #ffffff!important;
-  color: #172033!important;
-  border-color: #cbd5e1!important;
+body.light-mode select{
+  background:#ffffff!important;
+  color:#172033!important;
+  border-color:#cbd5e1!important;
+}body.light-mode .card,
+body.light-mode .panel,
+body.light-mode .modal-box,
+body.light-mode .report-box,
+body.light-mode .prompt-box{
+  background:#ffffff;
+  border-color:#d8e1ec;
+  color:#172033;
+}body.light-mode .preview,
+body.light-mode .editor,
+body.light-mode .codebox,
+body.light-mode .report-body,
+body.light-mode .prompt-body{
+  background:#f8fafc!important;
+  color:#172033!important;
+}body.light-mode .grid-bg{
+  background-image:
+    linear-gradient(rgba(15,23,42,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15,23,42,.045) 1px, transparent 1px)!important;
+}body.light-mode .btn{
+  background:#ffffff;
+  color:#172033;
+  border-color:#cbd5e1;
+}body.light-mode .btn:hover{
+  background:#f1f5f9;
+}body.light-mode .chip,
+body.light-mode .tab,
+body.light-mode .pill{
+  background:#e8eef7;
+  color:#334155;
+  border-color:#cbd5e1;
+}body.light-mode iframe{
+  background:#ffffff;
+}body.light-mode .empty,
+body.light-mode .muted,
+body.light-mode small{
+  color:#64748b!important;
+}body.light-mode .theme-toggle{
+  background:#ffffff;
+  border-color:#cbd5e1;
+  color:#172033;
+}.theme-toggle{
+  white-space:nowrap;
+/* --- 글자 크기 1.5배 확대 스크립트 --- */
+body, p, span, a, li, td, th, input, textarea, button, select {
+  font-size: 1.5rem !important; /* 기본 본문 글자 크기를 1.5배로 고정 */
 }
-body.light-mode .chip,
-body.light-mode .fbtn {
-  background: #e8eef7;
-  color: #334155;
-  border-color: #cbd5e1;
+
+/* 제목들은 본문보다 더 커야 하므로 비율에 맞춰 조정 */
+h1 { font-size: 3.0rem !important; }
+h2 { font-size: 2.5rem !important; }
+h3 { font-size: 2.0rem !important; }
+h4 { font-size: 1.75rem !important; }
+
+/* 아이콘이나 작은 배지류도 동반 상승 */
+.badge, .tag, i, small {
+  font-size: 1.2rem !important;
 }
-body.light-mode .btn {
-  background: #ffffff;
-  color: #172033;
-  border-color: #cbd5e1;
-}
-body.light-mode .btn:hover {
-  background: #f1f5f9;
-}
-</style>
+}</style>
 </head>
 <body>
 <header>
@@ -281,32 +311,31 @@ body.light-mode .btn:hover {
   </div>
   <div class="hright">
     <div class="nav-tabs">
-      <button class="nav-tab active" id="ntab-runner" onclick="sp('runner',this)">⚡ 실험 실행기</button>
-      <button class="nav-tab" id="ntab-gallery" onclick="sp('gallery',this)">🔬 갤러리</button>
-      <button class="nav-tab" id="ntab-board" onclick="sp('board',this)">📋 게시판</button>
-      <button class="btn theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="라이트모드로 전환">☀ 라이트모드</button>
+<button class="nav-tab" id="ntab-board" onclick="sp('board',this); if(typeof renderBoard==='function') renderBoard();">&#128196; 게시판</button>
+      <button class="nav-tab active" id="ntab-runner" onclick="sp('runner',this)">&#9889; 실험 실행기</button>
+      <button class="nav-tab" id="ntab-gallery" onclick="sp('gallery',this)">&#128300; 갤러리</button>
+<button class="btn theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="라이트모드로 전환">☀ 라이트모드</button>
     </div>
-    <button class="ham" onclick="toggleMob()">☰</button>
+    <button class="ham" onclick="toggleMob()">&#9776;</button>
     <div style="display:flex;align-items:center;gap:4px">
-      <button class="dbtn adev" id="dbtn-pc" onclick="setDevice('pc')" title="PC">💻</button>
-      <button class="dbtn" id="dbtn-tablet" onclick="setDevice('tablet')" title="태블릿">▱</button>
-      <button class="dbtn" id="dbtn-mobile" onclick="setDevice('mobile')" title="모바일">📱</button>
+      <button class="dbtn adev" id="dbtn-pc" onclick="setDevice('pc')" title="PC">&#128187;</button>
+      <button class="dbtn" id="dbtn-tablet" onclick="setDevice('tablet')" title="태블릿">&#9727;</button>
+      <button class="dbtn" id="dbtn-mobile" onclick="setDevice('mobile')" title="모바일">&#128241;</button>
     </div>
     <div style="display:flex;align-items:center;gap:6px">
-      <button class="btn" id="admin-login-btn" onclick="adminLogin()" style="font-size:11px">🔒 관리자</button>
+      <button class="btn" id="admin-login-btn" onclick="adminLogin()" style="font-size:11px">&#128274; 관리자</button>
       <div id="admin-badge" style="display:none;align-items:center;gap:6px;background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.3);border-radius:8px;padding:5px 10px">
-        <span style="font-size:11px;color:#f87171;font-family:var(--mono)">🔴 관리자</span>
+        <span style="font-size:11px;color:#f87171;font-family:var(--mono)">&#128308; 관리자</span>
         <button class="btn bdanger" onclick="adminLogout()" style="font-size:10px;padding:3px 7px">로그아웃</button>
       </div>
     </div>
   </div>
 </header>
 <div class="mob-nav" id="mob-nav">
-  <button class="nav-tab active" onclick="sp('runner',this);closeMob()">⚡ 실험 실행기</button>
-  <button class="nav-tab" onclick="sp('gallery',this);closeMob()">🔬 갤러리</button>
-  <button class="nav-tab" onclick="sp('board',this);closeMob()">📋 게시판</button>
+<button class="nav-tab" onclick="sp('board',this); closeMob(); if(typeof renderBoard==='function') renderBoard();">&#128196; 게시판</button>
+  <button class="nav-tab active" onclick="sp('runner',this);closeMob()">&#9889; 실험 실행기</button>
+  <button class="nav-tab" onclick="sp('gallery',this);closeMob()">&#128300; 갤러리</button>
 </div>
-
 <div class="pages">
 <div id="page-runner" class="page active">
   <div class="rw">
@@ -319,10 +348,18 @@ body.light-mode .btn:hover {
             <button class="btn" style="font-size:10px;padding:5px 9px" id="cpbtn" onclick="copyCode()">복사</button>
           </div>
         </div>
-        <textarea id="code-input" spellcheck="false" onkeydown="hkey(event)" placeholder="여기에 HTML 코드를 붙여넣으세요. AI에게 이렇게 요청해보세요: '단진자 운동 시뮬레이션을 HTML로 만들어줘.' 조건을 구체적으로 추가할수록 의도한 시뮬레이션에 더 가까워져요. 실행 결과가 마음에 안 들면 조건을 바꿔서 다시 요청해보세요!"></textarea>
+        <textarea id="code-input" spellcheck="false" onkeydown="hkey(event)" placeholder="여기에 HTML 코드를 붙여넣으세요.
+AI에게 이렇게 요청해보세요:
+&apos;단진자 운동 시뮬레이션을 HTML로 만들어줘.&apos;
+조건을 구체적으로 추가할수록 의도한 시뮬레이션에 더 가까워져요.
+&apos;단진자 운동 시뮬레이션을 HTML로 만들어줘.
+ - 슬라이더로 진자 길이와 초기 각도를 조절할 수 있게 해줘
+ - 주기 T를 실시간으로 화면에 표시해줘
+ - 다크 배경, 파란색 진자로 만들어줘&apos;
+실행 결과가 마음에 안 들면 조건을 바꿔서 다시 요청해보세요!"></textarea>
         <div class="ef">
-          <span class="hint">Ctrl+Enter · 실행 | Tab · 들여쓰기</span>
-          <button class="btn brun" onclick="runCode()">▶ 실행</button>
+          <span class="hint">Ctrl+Enter &#183; 실행 &nbsp;|&nbsp; Tab &#183; 들여쓰기</span>
+          <button class="btn brun" onclick="runCode()">&#9654; 실행</button>
         </div>
       </div>
       <div class="panel">
@@ -330,674 +367,1020 @@ body.light-mode .btn:hover {
           <div class="pl"><div class="dot dp"></div>PREVIEW</div>
           <div style="display:flex;gap:5px;align-items:center">
             <span id="rs"></span>
-            <button class="btn" style="font-size:10px;padding:5px 9px" onclick="reloadPv()">↻</button>
-            <button class="btn" style="font-size:10px;padding:5px 9px" onclick="openFs()">🗖 전체화면</button>
-            <button class="btn bup" onclick="toggleUp()">↑ 갤러리에 올리기</button>
+            <button class="btn" style="font-size:10px;padding:5px 9px" onclick="reloadPv()">&#8635;</button>
+            <button class="btn" style="font-size:10px;padding:5px 9px" onclick="openFs()">&#10610; 전체화면</button>
+            <button class="btn bup" onclick="toggleUp()">&#8593; 갤러리에 올리기</button>
           </div>
         </div>
         <div class="pv-inner">
-          <div class="pv-ph" id="pvph"><div class="ei">⚛</div><p>코드를 입력하고<br>[▶ 실행]을 눌러주세요</p></div>
+          <div class="pv-ph" id="pvph"><div class="ei">&#9883;</div><p>코드를 입력하고<br>[&#9654; 실행]을 눌러주세요</p></div>
           <iframe id="preview-frame" sandbox="allow-scripts allow-same-origin allow-modals allow-forms allow-popups allow-downloads"></iframe>
         </div>
-        <div class="pv-foot"><span style="font-family:var(--mono);font-size:10px;color:var(--text2);opacity:.3">sandbox · 안전 실행 환경</span></div>
+        <div class="pv-foot"><span style="font-family:var(--mono);font-size:10px;color:var(--text2);opacity:.3">sandbox &#183; 안전 실행 환경</span></div>
       </div>
     </div>
   </div>
   <div class="us" id="us">
     <div class="ui">
-      <div class="utr"><h3>// 갤러리 업로드</h3><button class="btn" style="font-size:10px;padding:4px 9px" onclick="toggleUp()">✕ 닫기</button></div>
+      <div class="utr"><h3>// 갤러리 업로드</h3><button class="btn" style="font-size:10px;padding:4px 9px" onclick="toggleUp()">&#10005; 닫기</button></div>
       <div class="ug">
         <div class="fg"><label>시뮬레이션 제목 *</label><input id="utitle" type="text" placeholder="예) 단진자 운동 시뮬레이션"></div>
         <div class="fg"><label>작성자 이름</label><input id="uauthor" type="text" placeholder="예) 홍길동"></div>
         <div class="fg"><label>단원 / 태그</label>
           <select id="utag">
-            <option value="역학">역학</option>
-            <option value="전기">전기</option>
-            <option value="파동">파동</option>
-            <option value="열역학">열역학</option>
-            <option value="광학">광학</option>
-            <option value="기타">기타</option>
-            <option value="교사자료">교사자료</option>
+            <option value="역학">역학</option><option value="전기">전기&#183;자기</option>
+            <option value="파동">파동&#183;광학</option><option value="열역학">열역학</option>
+            <option value="광학">광학</option><option value="기타">기타</option>
+            <option value="교사자료">&#128104;&#8205;&#127979; 교사 자료</option>
           </select>
         </div>
-        <div class="fg"><label>비밀번호 * (수정/삭제용)</label><div class="pww"><input id="upw" type="password" placeholder="4자리 이상"><button class="pwt" onclick="tupw()">👁</button></div></div>
+        <div class="fg"><label>비밀번호 * <span style="opacity:.45;font-size:9px">(수정&#183;삭제용)</span></label>
+          <div class="pww"><input id="upw" type="password" placeholder="4자리 이상" maxlength="20"><button class="pwt" onclick="tvpw('upw',this)" type="button">&#128065;</button></div>
+        </div>
       </div>
       <div class="ug2">
-        <div class="fg"><label>간단한 설명 *</label><input id="udesc" type="text" placeholder="이 시뮬레이션의 특징이나 조작법을 적어주세요."></div>
-        <div class="fg" style="justify-content:flex-end"><button class="btn bup" style="height:34px;font-size:12px" onclick="submitUp()">🚀 업로드 완료하기</button></div>
+        <div class="fg"><label>간단한 설명 (선택)</label><input id="udesc" type="text" placeholder="시뮬레이션에 대한 짧은 설명"></div>
+        <div style="display:flex;align-items:flex-end"><span id="ups" style="font-size:11px;font-family:var(--mono);padding-bottom:2px"></span></div>
+        <div style="display:flex;align-items:flex-end"><button class="btn bup" style="width:100%" id="post-btn" onclick="postToG()">&#8593; 올리기</button></div>
+      </div>
+      <div class="safe-note">
+        <b>공개 자료 작성 안내</b><br>
+        아래에는 두 가지를 따로 제출합니다. <b>AI 대화 원문</b>은 선생님만 확인하고, <b>공개용 제작 과정 보고서</b>는 갤러리에서 모두가 볼 수 있습니다.
+        공개용 보고서에는 이름, 이메일, 계정 정보, 비밀번호, API 키, 토큰, 인증 코드, 개인적인 대화가 들어가지 않도록 반드시 확인하세요.
+      </div>
+      <div class="fg" style="margin-top:10px">
+        <label>[관리자 확인용] AI와 나눈 실제 대화 원문 <span style="opacity:.45;font-size:9px">(선생님만 확인)</span></label>
+        <textarea id="uailog" class="tall" placeholder="ChatGPT, Gemini, Claude 등과 실제로 주고받은 대화 내용을 복사해서 붙여넣으세요. 이 내용은 관리자만 확인합니다."></textarea>
+      </div>
+      <div class="fg" style="margin-top:10px">
+        <label>[공개용] 앱 제작 과정 보고서 <span style="opacity:.45;font-size:9px">(갤러리에서 모두 공개)</span></label>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px">
+          <button class="btn" type="button" style="font-size:10px;padding:5px 9px" onclick="copyPublicPrompt()">공개용 정리 프롬프트 복사</button>
+          <span style="font-size:10px;color:var(--text2);align-self:center;opacity:.75">복사한 프롬프트를 AI에게 넣어 공개용 보고서를 만든 뒤 붙여넣으세요.</span>
+        </div>
+        <textarea id="upublicreport" class="tall" placeholder="AI 대화 원문을 바탕으로 개인정보를 제거하고 정리한 공개용 제작 과정 보고서를 붙여넣으세요."></textarea>
       </div>
     </div>
   </div>
   <div class="exbar">
-    <div class="exlbl">EXAMPLES:</div>
-    <div class="chip" onclick="loadEx('pendulum')">단진자 운동</div>
-    <div class="chip" onclick="loadEx('wave')">파동의 중첩</div>
-    <div class="chip" onclick="loadEx('ohm')">옴의 법칙 실험</div>
-    <div class="chip" onclick="loadEx('thermo')">기체 분자 운동론</div>
-    <div class="chip" onclick="loadEx('lens')">볼록렌즈 광선 추적</div>
+    <span class="exlbl">// 예제</span>
+    <button class="chip" onclick="loadEx(0)">&#8857; 단진자</button>
+    <button class="chip" onclick="loadEx(1)">&#8599; 포물선</button>
+    <button class="chip" onclick="loadEx(2)">&#8767; 파동 간섭</button>
+    <button class="chip" onclick="loadEx(3)">&#8455; 용수철</button>
+    <button class="chip" onclick="loadEx(4)">&#9889; 전기 회로</button>
   </div>
 </div>
-
 <div id="page-gallery" class="page">
   <div class="gw">
     <div class="gtop">
-      <h2>🔬 물리 시뮬레이션 갤러리</h2>
+      <h2>갤러리</h2>
       <div class="g-controls">
-        <div class="search-wrap">
-          <span class="search-icon">🔍</span>
-          <input type="text" id="gsearch" oninput="sch()" placeholder="제목, 설명, 작성자 검색...">
-        </div>
-        <select class="sort-sel" id="gsort" onchange="sch()">
-          <option value="new">최신순</option>
-          <option value="views">조회수순</option>
-          <option value="old">오래된순</option>
+        <div class="search-wrap"><span class="search-icon">&#128269;</span><input type="text" id="search-input" placeholder="제목 검색..." oninput="renderG()"></div>
+        <select class="sort-sel" id="sort-sel" onchange="renderG()">
+          <option value="latest">최신순</option><option value="views">조회수순</option><option value="title">제목순</option>
         </select>
+        <button class="btn" onclick="showQR(location.href,'홈페이지 QR','Class Physics 홈페이지')" style="font-size:11px;padding:6px 10px">&#128241; QR</button>
       </div>
     </div>
     <div class="subtabs">
-      <div class="frow" id="fzone">
-        <button class="fbtn on" onclick="flt('전체',this)">전체보기</button>
-        <button class="fbtn" onclick="flt('역학',this)">역학</button>
-        <button class="fbtn" onclick="flt('전기',this)">전기</button>
-        <button class="fbtn" onclick="flt('파동',this)">파동</button>
-        <button class="fbtn" onclick="flt('열역학',this)">열역학</button>
-        <button class="fbtn" onclick="flt('광학',this)">광학</button>
-        <button class="fbtn" onclick="flt('기타',this)">기타</button>
-        <button class="fbtn" onclick="flt('교사자료',this)">교사자료</button>
-      </div>
+      <button class="nav-tab active" id="subtab-student" onclick="switchSub('student',this)" style="font-size:12px;padding:6px 14px">학생 작품</button>
+      <button class="nav-tab" id="subtab-teacher" onclick="switchSub('teacher',this)" style="font-size:12px;padding:6px 14px">교사 추천 <span style="font-size:10px;opacity:.4">(준비중)</span></button>
     </div>
-    <div class="gg" id="ggrid"></div>
+    <div class="frow">
+      <button class="fbtn on" onclick="filterG('all',this)">전체</button>
+      <button class="fbtn" onclick="filterG('역학',this)">역학</button>
+      <button class="fbtn" onclick="filterG('전기',this)">전기&#183;자기</button>
+      <button class="fbtn" onclick="filterG('파동',this)">파동&#183;광학</button>
+      <button class="fbtn" onclick="filterG('열역학',this)">열역학</button>
+      <button class="fbtn" onclick="filterG('광학',this)">광학</button>
+      <button class="fbtn" onclick="filterG('기타',this)">기타</button>
+      <button class="fbtn" onclick="filterG('교사자료',this)">&#128104;&#8205;&#127979; 교사 자료</button>
+    </div>
+    <div id="sub-student"><div class="gg" id="gg"></div></div>
+    <div id="sub-teacher" style="display:none"><div class="gempty"><div class="ge">&#128104;&#8205;&#127979;</div><p>교사 추천 콘텐츠가 곧 추가됩니다</p></div></div>
   </div>
 </div>
-
 <div id="page-board" class="page">
   <div class="gw">
     <div class="gtop">
-      <h2>📋 자유 게시판</h2>
-      <div class="g-controls">
-        <button class="btn bup" onclick="openBoardWrite()">📝 새 글 쓰기</button>
+      <h2>&#128196; 자유 게시판</h2>
+    </div>
+    
+    <div class="panel" style="padding: 16px; margin-bottom: 20px;">
+      <h3 style="margin-bottom: 12px; font-size: 14px; color: var(--text);">새 글 작성</h3>
+      <div class="fg" style="margin-bottom: 10px;">
+        <label>제목</label>
+        <input type="text" id="board-title" placeholder="제목을 입력하세요">
+      </div>
+      <div class="fg" style="margin-bottom: 10px;">
+        <label>내용</label>
+        <textarea id="board-content" placeholder="내용을 입력하세요" style="min-height: 80px;"></textarea>
+      </div>
+      <div class="ug2" style="align-items: flex-end;">
+        <div class="fg">
+          <label>첨부파일 (선택)</label>
+          <input type="file" id="board-file" style="padding: 5px; cursor: pointer;">
+        </div>
+        <div class="fg">
+          <label>비밀번호 (입력 시 비밀글)</label>
+          <input type="password" id="board-pw" placeholder="미입력 시 공개글">
+        </div>
+        <div class="fg">
+          <button class="btn brun" onclick="addBoardPost()" style="width: 100%; height: 33px;">등록하기</button>
+        </div>
       </div>
     </div>
 
-    <div class="panel" style="margin-top: 15px; flex: 1; overflow-y: auto;">
-      <div class="ph">
-        <div class="pl"><div class="dot dc"></div>BOARD LIST</div>
-      </div>
-      <div style="padding: 15px; overflow-x: auto;">
-        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; min-width: 500px;">
-          <thead>
-            <tr style="border-bottom: 2px solid var(--borderB); color: var(--text2);">
-              <th style="padding: 10px 5px; width: 80px;">번호</th>
-              <th style="padding: 10px 5px;">제목</th>
-              <th style="padding: 10px 5px; width: 120px;">작성자</th>
-              <th style="padding: 10px 5px; width: 150px;">날짜</th>
-            </tr>
-          </thead>
-          <tbody id="board-list-tbody"></tbody>
-        </table>
-      </div>
-    </div>
+    <div id="board-list" style="display: flex; flex-direction: column; gap: 12px;"></div>
   </div>
 </div>
 </div>
-
 <div class="fsov" id="fsov">
-  <div class="fsbar">
-    <span id="fsttl">전체화면 미리보기</span>
-    <button class="btn bdanger" onclick="closeFs()">✕ 전체화면 종료</button>
-  </div>
+  <div class="fsbar"><span>Class Physics &#8212; 전체화면</span><button class="btn" onclick="closeFs()">&#10005; 닫기 (ESC)</button></div>
   <iframe id="fs-frame" sandbox="allow-scripts allow-same-origin allow-modals allow-forms allow-popups allow-downloads"></iframe>
 </div>
-
-<div class="mbg" id="md">
-  <div class="modal" id="mdbox">
-    <div class="mhd">
-      <div>
-        <div class="mttl" id="mttl">시뮬레이션 상세보기</div>
-        <div class="mmeta" id="mmeta">작성자: 관리자 | 날짜: 2025-01-01</div>
-      </div>
-      <button class="btn" onclick="cls()">✕</button>
-    </div>
+<div class="mbg" id="mbg" onclick="if(event.target===this)closeM()">
+  <div class="modal">
+    <div class="mhd"><div><div class="mttl" id="mttl"></div><div class="mmeta" id="mmeta"></div></div><button class="btn bdanger" style="font-size:10px" onclick="closeM()">&#10005;</button></div>
     <div class="mbody"><iframe id="modal-frame" sandbox="allow-scripts allow-same-origin allow-modals allow-forms allow-popups allow-downloads"></iframe></div>
-    <div class="mft">
-      <div class="mdesc" id="mdesc">설명 영역</div>
-      <div class="mac">
-        <div class="mdev">
-          <div class="mdev-label">DEV:</div>
-          <button class="btn on" id="mdev-pc" onclick="mdv('pc')">PC</button>
-          <button class="btn" id="mdev-tablet" onclick="mdv('tablet')">TAB</button>
-          <button class="btn" id="mdev-mobile" onclick="mdv('mobile')">MOB</button>
-        </div>
-        <button class="btn bamber" onclick="mqr()">📱 QR코드</button>
-        <button class="btn brun" onclick="med()">🛠 코드 수정</button>
-        <button class="btn bdanger" onclick="mdel()">🗑 삭제</button>
-        <button class="btn" onclick="cls()">닫기</button>
-      </div>
-    </div>
+    <div class="mft"><div style="flex:1;min-width:260px"><div class="mdesc" id="mdesc"></div><details class="report-details" id="report-wrap" style="display:none"><summary>제작 과정 보고서 보기</summary><div class="report-box" id="mreport"></div></details></div><div class="mac" id="mac"></div></div>
   </div>
 </div>
-
-<div class="mbg" id="board-write-modal">
-  <div class="modal" style="max-width: 600px;">
-    <div class="mhd">
-      <div class="mttl">📝 새로운 게시글 작성</div>
-      <button class="btn" onclick="closeBoardWrite()">✕</button>
-    </div>
-    <div style="padding: 20px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto;">
-      <div class="fg">
-        <label>작성자 *</label>
-        <input type="text" id="board-author" placeholder="이름 또는 닉네임을 입력하세요">
-      </div>
-      <div class="fg">
-        <label>제목 *</label>
-        <input type="text" id="board-title" placeholder="글 제목을 입력하세요">
-      </div>
-      <div class="fg">
-        <label>내용 *</label>
-        <textarea id="board-content" style="min-height: 150px; height: 180px;" placeholder="내용을 입력하세요"></textarea>
-      </div>
-      <div class="fg">
-        <label>비밀번호 (비밀글 원할 시 입력)</label>
-        <input type="password" id="board-pw" placeholder="설정 시 암호 입력 혹은 관리자만 열람 가능">
-      </div>
-      <div class="fg">
-        <label>파일 첨부 (최대 4MB)</label>
-        <input type="file" id="board-file" style="padding: 5px; background:transparent; border:none;">
-      </div>
-    </div>
-    <div class="mft">
-      <div></div>
-      <div class="mac">
-        <button class="btn" onclick="closeBoardWrite()">취소</button>
-        <button class="btn brun" onclick="saveBoardPost()">등록하기</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="mbg" id="board-view-modal">
-  <div class="modal" style="max-width: 600px;">
-    <div class="mhd">
-      <div>
-        <div class="mttl" id="v-board-title" style="font-size: 16px;"></div>
-        <div class="mmeta">작성자: <span id="v-board-author"></span> | 날짜: <span id="v-board-date"></span></div>
-      </div>
-      <button class="btn" onclick="closeBoardView()">✕</button>
-    </div>
-    <div style="padding: 20px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; min-height: 200px; color: var(--text);">
-      <div id="v-board-content" style="white-space: pre-wrap; line-height: 1.6; font-size: 14px; word-break: break-all;"></div>
-      <div id="v-board-file-zone" style="margin-top: 15px; padding: 10px; background: var(--bg4); border-radius: 6px; border: 1px solid var(--border); display: none;">
-        <span style="font-size: 11px; color: var(--text2);">📎 첨부파일 링크:</span>
-        <a id="v-board-file-link" href="#" download="" style="font-size: 13px; color: var(--accent); margin-left: 5px; text-decoration: underline; font-weight: bold;">파일명</a>
-      </div>
-    </div>
-    <div class="mft">
-      <div></div>
-      <div class="mac">
-        <button class="btn bdanger" id="v-board-del-btn">삭제</button>
-        <button class="btn" onclick="closeBoardView()">닫기</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="qr-bg" id="qrbg" onclick="if(event.target===this)this.classList.remove('on')">
+<div class="qr-bg" id="qr-bg" onclick="if(event.target===this)closeQR()">
   <div class="qr-box">
-    <h3 id="qrt">QR Code</h3>
-    <p>스마트폰 카메라로 스캔하면<br>모바일 화면으로 실험을 체험할 수 있습니다.</p>
+    <h3 id="qr-title">QR 코드</h3><p id="qr-desc"></p>
     <div id="qr-canvas"></div>
-    <div class="qr-url" id="qru">url</div>
-    <button class="btn" style="width:100%" onclick="document.getElementById('qrbg').classList.remove('on')">닫기</button>
+    <div class="qr-url" id="qr-url"></div>
+    <button class="btn" style="width:100%" onclick="closeQR()">닫기</button>
   </div>
 </div>
-
 <div class="pwmbg" id="pwmbg">
   <div class="pwm">
-    <h3 id="pwt">비밀번호 확인</h3>
-    <p id="pwd">콘텐츠를 수정/삭제하기 위해<br>업로드 시 설정한 암호를 입력해주세요.</p>
-    <div class="pwwrap"><input type="password" id="pwmip" placeholder="••••"><button class="pt" onclick="tpwm()">👁</button></div>
+    <h3 id="pmtitle">비밀번호 확인</h3><p id="pmdesc"></p>
     <div id="pwerr"></div>
-    <div class="pmbtns"><button class="pmcancel" onclick="cpw()">취소</button><button class="pmok" onclick="opw()">확인</button></div>
+    <div class="pwwrap"><input id="pwinput" type="password" placeholder="비밀번호 입력" onkeydown="if(event.key==='Enter')confPw()"><button class="pt" onclick="tvpw('pwinput',this)" type="button">&#128065;</button></div>
+    <div class="pmbtns"><button class="pmcancel" onclick="closePwM()">취소</button><button class="pmok" onclick="confPw()">확인</button></div>
   </div>
 </div>
-
 <script>
-const def=[
-{id:"d1",title:"단진자 운동 시뮬레이션",author:"물리쌤 최태현",tag:"역학",desc:"진자의 길이와 중력 가속도를 변경하며 주기의 변화를 실시간 그래프로 추적하는 정밀 실험 시뮬레이션입니다.",views:420,date:"2025-01-10",code:`<!DOCTYPE html><html><head><style>body{background:#0f172a;color:#fff;font-family:sans-serif;text-align:center;padding:20px}canvas{background:#1e293b;border-radius:10px;box-shadow:0 10px 25px rgba(0,0,0,0.5)}input{width:160px;margin:0 10px}.val{color:#38bdf8;font-weight:bold}</style></head><body><h3>단진자 시뮬레이션 (Pendulum)</h3><canvas id="c" width="500" height="320"></canvas><div style="margin-top:15px">길이 (L): <input type="range" id="len" min="50" max="200" value="120"> <span id="lv" class="val">120</span><br>중력 (g): <input type="range" id="grv" min="5" max="25" value="9.8" step="0.1"> <span id="gv" class="val">9.8</span></div><p style="font-size:13px;color:#94a3b8">이론 주기 T = 2&pi;&radic;(L/g) &asymp; <span id="period" style="color:#f43f5e"></span>초</p><script>const canvas=document.getElementById('c'),ctx=canvas.getContext('2d'),L=document.getElementById('len'),G=document.getElementById('grv');let angle=Math.PI/4,v=0,a=0;function draw(){ctx.clearRect(0,0,500,320);let length=parseFloat(L.value),g=parseFloat(G.value);document.getElementById('lv').innerText=length;document.getElementById('gv').innerText=g;document.getElementById('period').innerText=(2*Math.PI*Math.sqrt(length/100/g)).toFixed(2);a=(-1*g/length)*Math.sin(angle);v+=a;v*=0.999;angle+=v;let x=250+length*Math.sin(angle),y=40+length*Math.cos(angle);ctx.strokeStyle='#64748b';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(250,40);ctx.lineTo(x,y);ctx.stroke();ctx.fillStyle='#38bdf8';ctx.beginPath();ctx.arc(x,y,16,0,Math.PI*2);ctx.fill();requestAnimationFrame(draw)}draw();<\/script></body></html>`},
-{id:"d2",title:"파동의 간섭 및 중첩",author:"물리쌤 최태현",tag:"파동",desc:"두 개의 서로 다른 파동원에서 일어나는 수면파 파동의 상쇄 간섭과 보강 간섭 평면 시각화 장치입니다.",views:312,date:"2025-01-12",code:`<!DOCTYPE html><html><head><style>body{background:#0f172a;color:#fff;font-family:sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;height:90vh;margin:0}canvas{background:#000;border:1px solid #334155;border-radius:8px}</style></head><body><h4 style="margin:5px">수면파의 간섭 (Wave Interference)</h4><canvas id="canvas" width="400" height="260"></canvas><p style="font-size:12px;color:#94a3b8;margin:5px">두 파원으로부터의 거리에 따른 보강/상쇄 간섭 체크</p><script>const canvas=document.getElementById('canvas'),ctx=canvas.getContext('2d'),w=400,h=260;let t=0;function animate(){t+=0.15;const imgData=ctx.createImageData(w,h);for(let y=0;y<h;y++){for(let x=0;x<w;x++){let d1=Math.sqrt((x-140)**2+(y-130)**2),d2=Math.sqrt((x-260)**2+(y-130)**2);let v1=Math.sin(d1*0.2-t),v2=Math.sin(d2*0.2-t);let amp=(v1+v2)*0.5;let idx=(x+y*w)*4;let color=Math.floor((amp+1)*127.5);imgData.data[idx]=color*0.2;imgData.data[idx+1]=color*0.6;imgData.data[idx+2]=color;imgData.data[idx+3]=255}}ctx.putImageData(imgData,0,0);requestAnimationFrame(animate)}animate();<\/script></body></html>`},
-{id:"d3",title:"기체 분자 운동론 2D 상자",author:"물리쌤 최태현",tag:"열역학",desc:"이상기체 분자들이 완전 탄성 충돌을 일으킬 때 상자의 온도와 부피에 따른 압력 변화 관계를 시뮬레이션합니다.",views:289,date:"2025-01-15",code:`<!DOCTYPE html><html><head><style>body{background:#0a0f1d;color:#e2e8f0;font-family:sans-serif;text-align:center;padding:10px}canvas{background:#111827;border:2px solid #ff007f;border-radius:8px}input{width:180px;accent-color:#ff007f}</style></head><body><h3 style="color:#ff007f;margin:5px">이상 기체 분자 운동 (Ideal Gas 2D)</h3><canvas id="box" width="460" height="240"></canvas><div style="margin:10px">온도 (열에너지): <input type="range" id="temp" min="1" max="15" value="5"><span id="tv" style="color:#ff007f;font-weight:bold;margin-left:8px">5</span></div><script>const canvas=document.getElementById('box'),ctx=canvas.getContext('2d'),T=document.getElementById('temp');let balls=[];for(let i=0;i<45;i++)balls.push({x:Math.random()*440+10,y:Math.random()*220+10,vx:(Math.random()-0.5)*4,vy:(Math.random()-0.5)*4});function play(){ctx.clearRect(0,0,460,240);let tf=parseFloat(T.value);document.getElementById('tv').innerText=tf;balls.forEach(b=>{b.x+=b.vx*tf*0.4;b.y+=b.vy*tf*0.4;if(b.x<6||b.x>454)b.vx*=-1;if(b.y<6||b.y>234)b.vy*=-1;ctx.fillStyle=tf>9?'#ff3366':'#00d97e';ctx.beginPath();ctx.arc(b.x,b.y,5,0,Math.PI*2);ctx.fill()});requestAnimationFrame(play)}play();<\/script></body></html>`}
-];
-
-let items=[];
-function sync(){try{const s=localStorage.getItem("phys_items");items=s?JSON.parse(s):[...def]}catch(e){items=[...def]}}
-function svs(){localStorage.setItem("phys_items",JSON.stringify(items))}
-sync();
-
-let curFlt="전체",curSrt="new";
-function gitems(){
-  let f=[...items];
-  const q=document.getElementById("gsearch").value.toLowerCase().trim();
-  if(q){
-    f=f.filter(i=>i.title.toLowerCase().includes(q)||i.desc.toLowerCase().includes(q)||i.author.toLowerCase().includes(q));
+var APPS_URL = "https://script.google.com/macros/s/AKfycbyWvBbIyqSUuqK2xpzWmmzXV7beiTJmzprI_56ov00xy5WmBIRu7Nd2cOXdJEeAYf-0Dg/exec";
+var PUBLIC_PROMPT = "아래에 내가 생성형 AI와 실제로 나눈 대화 내용을 붙여넣을 거야.\n이 대화 내용을 바탕으로, 내가 만든 앱의 제작 과정과 개선 과정을 공개용 제작 과정 보고서 형태로 정리해줘.\n\n다음 조건을 반드시 지켜줘.\n\n1. 아래에 붙여넣은 실제 대화 내용에 나온 정보만 바탕으로 작성해줘.\n2. 실제 대화에 없는 기능, 의도, 오류 해결 과정, 배운 점은 새로 지어내지 마.\n3. 내가 처음 만들고자 한 앱의 목적을 대화 내용에 근거해서 설명해줘.\n4. 앱 제작을 위해 처음 입력한 요청 내용을 요약해줘.\n5. 이후 내가 어떤 기능을 추가하거나 수정했는지 시간 순서대로 정리해줘.\n6. 실행 과정에서 오류, 불편한 점, 부족한 점이 실제 대화에 나타난 경우에만 그것을 어떻게 발견했고 어떻게 수정 요청했는지 정리해줘.\n7. 오류나 불편한 점이 대화에 명확히 나타나지 않는다면, “대화 원문에서 구체적인 오류나 불편 사항은 확인되지 않음”이라고 써줘.\n8. 최종 앱의 기능과 특징을 정리하되, 실제 대화에서 확인되는 기능만 포함해줘.\n9. 내가 단순히 코드를 받은 것이 아니라, 추가 요청이나 수정 요청을 통해 앱을 개선한 과정이 실제 대화에 드러나는 경우에만 그 점을 설명해줘.\n10. 코드 전문은 출력하지 말고, 제작 과정과 개선 과정만 정리해줘.\n11. 개인정보, 계정 정보, 비밀번호, API 키, 인증 토큰, 이메일 주소, 전화번호, 학교 계정, 웹앱 배포 주소 중 민감해 보이는 정보는 절대 포함하지 마.\n12. 만약 대화 내용 안에 개인정보나 민감정보로 보이는 내용이 있다면, 보고서에 쓰지 말고 “[개인정보 보호를 위해 생략함]”이라고 처리해줘.\n13. 특정 개인을 식별할 수 있는 이름, 학번, 반, 번호가 있다면 일반적인 표현으로 바꿔줘. 예를 들어 “홍길동” 대신 “작성자”, “우리 반 3번 학생” 대신 “사용자”라고 표현해줘.\n14. 문장은 학생이 제출하는 보고서처럼 자연스럽게 작성해줘.\n15. 너무 과장된 표현은 피하고, 실제 제작 과정이 드러나도록 구체적으로 작성해줘.\n16. “배운 점”은 추측해서 쓰지 마. 학생이 실제로 말했거나, 대화에서 명확히 확인되는 제작 태도와 개선 과정만 바탕으로 작성해줘.\n17. 학생이 무엇을 배웠는지 원문만으로 명확히 알 수 없다면, “대화 원문만으로는 학생이 실제로 무엇을 배웠는지 명확히 확인하기 어렵다”라고 써줘.\n18. 평가나 연구에 활용될 수 있는 자료이므로, 실제 원문보다 학생의 역량이 과장되어 보이도록 쓰지 마.\n\n아래 형식으로 작성해줘.\n\n1. 앱 제작 주제\n2. 앱 제작 목적\n3. 처음 입력한 프롬프트 요약\n4. 제작 과정에서 추가하거나 수정한 내용\n5. 오류 또는 문제 해결 과정\n6. 최종 앱의 주요 기능\n7. 원문에서 확인되는 제작 과정의 특징\n8. 원문만으로 확인하기 어려운 점\n9. 최종 제출용 요약문\n\n특히 9번 “최종 제출용 요약문”은 5~8문장 정도의 자연스러운 문단으로 작성해줘.\n단, 요약문 안에서도 원문에 없는 배운 점이나 성찰을 새로 만들어내지 마.\n\n이제 아래에 실제 대화 내용을 붙여넣을게.\n\n[여기에 생성형 AI와 나눈 실제 대화 내용을 붙여넣기]";
+// ── 관리자 인증 ────────────────────────────────────────────
+// 비밀번호 평문은 소스에 없음. 해시값만 보관.
+// 비밀번호 변경 시: 브라우저 콘솔에서 hpw("새비밀번호") 실행 후 ADMIN_HASH 교체.
+var ADMIN_HASH = "pfc6re";
+var _aKey = null; // 로그인 시 런타임 메모리에만 저장
+// ──────────────────────────────────────────────────────────
+var PUBLIC_REPORT_PROMPT = `아래에 내가 생성형 AI와 실제로 나눈 대화 내용을 붙여넣을 거야.
+이 대화 내용을 바탕으로, 내가 만든 앱의 제작 과정과 개선 과정을 공개용 제작 과정 보고서 형태로 정리해줘.
+다음 조건을 반드시 지켜줘.
+1. 아래에 붙여넣은 실제 대화 내용에 나온 정보만 바탕으로 작성해줘.
+2. 실제 대화에 없는 기능, 의도, 오류 해결 과정은 새로 지어내지 마.
+3. 내가 처음 만들고자 한 앱의 목적을 자연스럽게 설명해줘.
+4. 앱 제작을 위해 처음 입력한 요청 내용을 요약해줘.
+5. 이후 내가 어떤 기능을 추가하거나 수정했는지 시간 순서대로 정리해줘.
+6. 실행 과정에서 오류, 불편한 점, 부족한 점이 있었다면 그것을 어떻게 발견했고 어떻게 고쳤는지 정리해줘.
+7. 최종 앱의 기능과 특징을 정리해줘.
+8. 내가 단순히 코드를 받은 것이 아니라, 실행해 보고 문제를 발견하고 수정 요청을 하면서 앱을 개선했다는 점이 드러나게 써줘.
+9. 코드 전문은 출력하지 말고, 제작 과정과 개선 과정만 정리해줘.
+10. 개인정보, 계정 정보, 비밀번호, API 키, 인증 토큰, 이메일 주소, 전화번호, 학교 계정, 웹앱 배포 주소 중 민감해 보이는 정보는 절대 포함하지 마.
+11. 만약 대화 내용 안에 개인정보나 민감정보로 보이는 내용이 있다면, 보고서에 쓰지 말고 “[개인정보 보호를 위해 생략함]”이라고 처리해줘.
+12. 특정 개인을 식별할 수 있는 이름, 학번, 반, 번호가 있다면 일반적인 표현으로 바꿔줘. 예를 들어 “홍길동” 대신 “작성자”, “우리 반 3번 학생” 대신 “사용자”라고 표현해줘.
+13. 문장은 학생이 제출하는 보고서처럼 자연스럽게 작성해줘.
+14. 너무 과장된 표현은 피하고, 실제 제작 과정이 드러나도록 구체적으로 작성해줘.
+15. 마지막에는 이 활동을 통해 배운 점이 드러나게 정리해줘.
+아래 형식으로 작성해줘.
+1. 앱 제작 주제
+2. 앱 제작 목적
+3. 처음 입력한 프롬프트 요약
+4. 제작 과정에서 수정한 내용
+5. 오류 또는 문제 해결 과정
+6. 최종 앱의 주요 기능
+7. 제작 과정에서 배운 점
+8. 최종 제출용 요약문
+특히 8번 “최종 제출용 요약문”은 5~8문장 정도의 자연스러운 문단으로 작성해줘.
+이제 아래에 실제 대화 내용을 붙여넣을게.
+[여기에 생성형 AI와 나눈 실제 대화 내용을 붙여넣기]`;
+var EX = ["<!DOCTYPE html><html><head><meta charset=\"UTF-8\"><style>body{background:#0a0e1a;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0;font-family:sans-serif;color:#fff}.ctrl{margin-top:14px;display:flex;gap:14px;font-size:13px;color:#8892a4}label{display:flex;align-items:center;gap:6px}input[type=range]{width:120px}</style></head><body><canvas id=\"c\" width=\"380\" height=\"310\"></canvas><div class=\"ctrl\"><label>\uae38\uc774<input id=\"L\" type=\"range\" min=\"60\" max=\"180\" value=\"120\"><span id=\"Lv\">120</span>px</label><label>\uac01\ub3c4<input id=\"A\" type=\"range\" min=\"5\" max=\"75\" value=\"40\"><span id=\"Av\">40</span>&#176;</label><button onclick=\"reset()\" style=\"padding:6px 14px;background:#00d4ff;border:none;border-radius:6px;color:#0a0e1a;font-weight:700;cursor:pointer\">\ub9ac\uc14b</button></div><script>var cv=document.getElementById(\"c\"),ctx=cv.getContext(\"2d\"),cx=190,cy=40,g=9.8,L,angle,omega=0;function reset(){L=+document.getElementById(\"L\").value;angle=+document.getElementById(\"A\").value*Math.PI/180;omega=0}[\"L\",\"A\"].forEach(function(id){document.getElementById(id).oninput=function(e){document.getElementById(id+\"v\").textContent=e.target.value;reset()}});reset();function draw(){ctx.clearRect(0,0,380,310);var alpha=-(g/L)*Math.sin(angle);omega+=alpha*0.016;angle+=omega*0.016;var bx=cx+L*Math.sin(angle),by=cy+L*Math.cos(angle);ctx.strokeStyle=\"rgba(255,255,255,.25)\";ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(bx,by);ctx.stroke();ctx.beginPath();ctx.arc(cx,cy,5,0,Math.PI*2);ctx.fillStyle=\"#8892a4\";ctx.fill();ctx.beginPath();ctx.arc(bx,by,16,0,Math.PI*2);ctx.fillStyle=\"#00d4ff\";ctx.fill();ctx.fillStyle=\"#0a0e1a\";ctx.font=\"bold 11px sans-serif\";ctx.textAlign=\"center\";ctx.fillText(\"m\",bx,by+4);ctx.fillStyle=\"#8892a4\";ctx.font=\"12px sans-serif\";ctx.fillText(\"T=\"+(2*Math.PI*Math.sqrt(L/980)).toFixed(2)+\"s\",190,295);requestAnimationFrame(draw)}draw()<\/script></body></html>","<!DOCTYPE html><html><head><meta charset=\"UTF-8\"><style>body{background:#0a0e1a;color:#fff;font-family:sans-serif;margin:0;display:flex;flex-direction:column;align-items:center;padding:16px}canvas{background:#0a0e1a;border:1px solid rgba(255,255,255,.05);border-radius:8px}.ctrl{display:flex;gap:14px;margin:10px 0;flex-wrap:wrap;justify-content:center;font-size:13px;color:#8892a4}label{display:flex;align-items:center;gap:5px}input[type=range]{width:90px}button{padding:7px 18px;background:#7c3aed;border:none;border-radius:6px;color:#fff;cursor:pointer;font-weight:700}</style></head><body><canvas id=\"c\" width=\"500\" height=\"280\"></canvas><div class=\"ctrl\"><label>\ucd08\uc18d\ub3c4<input id=\"v0\" min=\"10\" max=\"80\" value=\"40\" type=\"range\"><span id=\"v0v\">40</span>m/s</label><label>\uac01\ub3c4<input id=\"th\" min=\"5\" max=\"85\" value=\"45\" type=\"range\"><span id=\"thv\">45</span>&#176;</label><button onclick=\"launch()\">\ubc1c\uc0ac!</button></div><script>var cv=document.getElementById(\"c\"),ctx=cv.getContext(\"2d\"),g=9.8,sc=4.5,ox=30,oy=250,anim,trail=[];[\"v0\",\"th\"].forEach(function(id){document.getElementById(id).oninput=function(e){document.getElementById(id+\"v\").textContent=e.target.value}});function launch(){cancelAnimationFrame(anim);trail=[];var v0=+document.getElementById(\"v0\").value,th=+document.getElementById(\"th\").value*Math.PI/180,vx=v0*Math.cos(th),vy=v0*Math.sin(th),t=0;function step(){ctx.clearRect(0,0,500,280);ctx.strokeStyle=\"rgba(255,255,255,.08)\";ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,oy);ctx.lineTo(500,oy);ctx.stroke();var x=vx*t,y=vy*t-0.5*g*t*t;if(y<0&&t>0){ctx.fillStyle=\"#8892a4\";ctx.font=\"12px sans-serif\";ctx.textAlign=\"left\";ctx.fillText(\"\uc0ac\uac70\ub9ac:\"+(vx*2*vy/g).toFixed(1)+\"m \ucd5c\uace0\ub192\uc774:\"+(vy*vy/(2*g)).toFixed(1)+\"m\",10,20);return}trail.push({x:x,y:y});ctx.strokeStyle=\"rgba(124,58,237,.5)\";ctx.lineWidth=2;ctx.beginPath();trail.forEach(function(p,i){if(i===0)ctx.moveTo(ox+p.x*sc,oy-p.y*sc);else ctx.lineTo(ox+p.x*sc,oy-p.y*sc)});ctx.stroke();ctx.beginPath();ctx.arc(ox+x*sc,oy-y*sc,7,0,Math.PI*2);ctx.fillStyle=\"#00d4ff\";ctx.fill();t+=0.05;anim=requestAnimationFrame(step)}step()}launch()<\/script></body></html>","<!DOCTYPE html><html><head><meta charset=\"UTF-8\"><style>body{background:#0a0e1a;color:#fff;font-family:sans-serif;margin:0;display:flex;flex-direction:column;align-items:center;padding:16px}canvas{background:#0a0e1a;border-radius:8px}.ctrl{display:flex;gap:14px;font-size:13px;color:#8892a4;margin-top:10px;flex-wrap:wrap;justify-content:center}label{display:flex;align-items:center;gap:5px}input[type=range]{width:90px}</style></head><body><canvas id=\"c\" width=\"500\" height=\"280\"></canvas><div class=\"ctrl\"><label>\ud30c1 \uc9c4\ub3d9\uc218<input id=\"f1\" type=\"range\" min=\"1\" max=\"5\" value=\"2\" step=\".5\"><span id=\"f1v\">2</span>Hz</label><label>\ud30c2 \uc9c4\ub3d9\uc218<input id=\"f2\" type=\"range\" min=\"1\" max=\"5\" value=\"3\" step=\".5\"><span id=\"f2v\">3</span>Hz</label></div><script>var cv=document.getElementById(\"c\"),ctx=cv.getContext(\"2d\"),t=0;[\"f1\",\"f2\"].forEach(function(id){document.getElementById(id).oninput=function(e){document.getElementById(id+\"v\").textContent=e.target.value}});function draw(){ctx.clearRect(0,0,500,280);var f1=+document.getElementById(\"f1\").value,f2=+document.getElementById(\"f2\").value;[[\"#00d4ff\",f1,60,\"\ud30c1\"],[\"#7c3aed\",f2,140,\"\ud30c2\"],[\"#10b981\",0,225,\"\ud569\uc131\"]].forEach(function(a){var color=a[0],freq=a[1],yo=a[2],lbl=a[3];ctx.beginPath();for(var x=0;x<500;x++){var nx=x/500,y=freq?yo+35*Math.sin(2*Math.PI*(freq*nx+t)):yo+35*(Math.sin(2*Math.PI*(f1*nx+t))+Math.sin(2*Math.PI*(f2*nx+t)))/2;if(x===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.strokeStyle=color;ctx.lineWidth=lbl===\"\ud569\uc131\"?2.5:1.5;ctx.stroke();ctx.fillStyle=color;ctx.font=\"11px sans-serif\";ctx.fillText(lbl,4,yo-16)});t+=0.005;requestAnimationFrame(draw)}draw()<\/script></body></html>","<!DOCTYPE html><html><head><meta charset=\"UTF-8\"><style>body{background:#0a0e1a;color:#fff;font-family:sans-serif;margin:0;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh}canvas{background:#0a0e1a}.ctrl{margin-top:14px;display:flex;gap:14px;font-size:13px;color:#8892a4}label{display:flex;align-items:center;gap:5px}input[type=range]{width:100px}</style></head><body><canvas id=\"c\" width=\"400\" height=\"260\"></canvas><div class=\"ctrl\"><label>\uc9c8\ub7c9<input id=\"m\" type=\"range\" min=\"1\" max=\"5\" value=\"2\"><span id=\"mv\">2</span>kg</label><label>\ubcc0\uc704<input id=\"A\" type=\"range\" min=\"20\" max=\"100\" value=\"60\"><span id=\"Av\">60</span>px</label></div><script>var cv=document.getElementById(\"c\"),ctx=cv.getContext(\"2d\"),k=200,cx=200,x,v=0;function reset(){x=+document.getElementById(\"A\").value;v=0}[\"m\",\"A\"].forEach(function(id){document.getElementById(id).oninput=function(e){document.getElementById(id+\"v\").textContent=e.target.value;reset()}});reset();function drawSpring(x0,y0,x1){var seg=(x1-x0)/32,amp=11;ctx.beginPath();ctx.moveTo(x0,y0);for(var i=0;i<32;i++){var px=x0+(i+1)*seg,py=y0+(i%4<2?amp:-amp);ctx.lineTo(px,py)}ctx.lineTo(x1,y0);ctx.strokeStyle=\"#8892a4\";ctx.lineWidth=2;ctx.stroke()}function draw(){ctx.clearRect(0,0,400,260);var m=+document.getElementById(\"m\").value,a=-k/m*x;v+=a*0.016;x+=v*0.016;var bx=cx+x,by=130;ctx.fillStyle=\"rgba(255,255,255,.08)\";ctx.fillRect(0,0,6,260);drawSpring(6,by,bx-18);ctx.fillStyle=\"#00d4ff\";ctx.fillRect(bx-18,by-18,36,36);ctx.fillStyle=\"#0a0e1a\";ctx.font=\"bold 12px sans-serif\";ctx.textAlign=\"center\";ctx.fillText(\"m\",bx,by+5);ctx.fillStyle=\"#8892a4\";ctx.font=\"11px sans-serif\";ctx.fillText(\"T=\"+(2*Math.PI*Math.sqrt(m/k)).toFixed(2)+\"s\",200,16);requestAnimationFrame(draw)}draw()<\/script></body></html>","<!DOCTYPE html><html><head><meta charset=\"UTF-8\"><style>body{background:#0a0e1a;color:#fff;font-family:sans-serif;margin:0;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh}.ctrl{margin-top:14px;display:flex;gap:14px;font-size:13px;color:#8892a4;flex-wrap:wrap;justify-content:center}label{display:flex;align-items:center;gap:5px}input[type=range]{width:100px}.info{margin-top:8px;font-size:14px;color:#00d4ff;font-family:monospace}</style></head><body><canvas id=\"c\" width=\"380\" height=\"240\"></canvas><div class=\"ctrl\"><label>\uc804\uc555 V<input id=\"V\" type=\"range\" min=\"1\" max=\"20\" value=\"9\"><span id=\"Vv\">9</span>V</label><label>\uc800\ud56d R<input id=\"R\" type=\"range\" min=\"1\" max=\"20\" value=\"3\"><span id=\"Rv\">3</span>&#937;</label></div><div class=\"info\" id=\"info\"></div><script>var cv=document.getElementById(\"c\"),ctx=cv.getContext(\"2d\"),t=0;[\"V\",\"R\"].forEach(function(id){document.getElementById(id).oninput=function(e){document.getElementById(id+\"v\").textContent=e.target.value}});function draw(){ctx.clearRect(0,0,380,240);var V=+document.getElementById(\"V\").value,R=+document.getElementById(\"R\").value,I=V/R,P=V*I;document.getElementById(\"info\").textContent=\"I=\"+I.toFixed(2)+\"A P=\"+P.toFixed(2)+\"W\";ctx.strokeStyle=\"rgba(255,255,255,.12)\";ctx.lineWidth=3;ctx.lineJoin=\"round\";ctx.beginPath();ctx.moveTo(50,50);ctx.lineTo(330,50);ctx.lineTo(330,190);ctx.lineTo(50,190);ctx.lineTo(50,50);ctx.stroke();ctx.fillStyle=\"#00d4ff\";ctx.fillRect(30,95,40,40);ctx.fillStyle=\"#0a0e1a\";ctx.font=\"bold 10px sans-serif\";ctx.textAlign=\"center\";ctx.fillText(V+\"V\",50,118);ctx.strokeStyle=\"#f87171\";ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(295,50);ctx.lineTo(295,190);ctx.stroke();ctx.fillStyle=\"#f87171\";ctx.font=\"bold 10px sans-serif\";ctx.fillText(R+\"ohm\",307,123);var speed=I*2.5,pts=[],i;for(i=0;i<5;i++){var p=(t*speed/360+i/5)%1,px,py;if(p<.65){px=50+p/.65*280;py=50}else if(p<.82){var q=(p-.65)/.17;px=330;py=50+q*140}else{var q2=(p-.82)/.18;px=330-q2*280;py=190}pts.push({x:px,y:py})}pts.forEach(function(pt){ctx.beginPath();ctx.arc(pt.x,pt.y,5,0,Math.PI*2);ctx.fillStyle=\"#00d4ff\";ctx.shadowColor=\"#00d4ff\";ctx.shadowBlur=8;ctx.fill();ctx.shadowBlur=0});t+=.3;requestAnimationFrame(draw)}draw()<\/script></body></html>"];
+var posts = [], curF = "all", openP = null, pwAct = null, isAdmin = false;
+var currentDevice = "pc";
+var views = JSON.parse(localStorage.getItem("rp_views") || "{}");
+function hpw(pw) { var h = 0; for (var i = 0; i < pw.length; i++) { h = ((h << 5) - h) + pw.charCodeAt(i); h |= 0; } return h.toString(36); }
+function apiFetch(method, body) {
+  if (method === "GET") return fetch(APPS_URL).then(function(r) { return r.json(); });
+  return fetch(APPS_URL, { method: "POST", body: JSON.stringify(body) }).then(function(r) { return r.json(); });
+}function sp(id, btn) {
+  document.querySelectorAll(".page").forEach(function(p) { p.classList.remove("active"); });
+  document.querySelectorAll(".nav-tabs .nav-tab").forEach(function(b) { b.classList.remove("active"); });
+  document.getElementById("page-" + id).classList.add("active");
+  btn.classList.add("active");
+  if (id === "gallery") loadPosts();
+}function toggleMob() { document.getElementById("mob-nav").classList.toggle("open"); }
+function closeMob() { document.getElementById("mob-nav").classList.remove("open"); }
+function setDevice(type) {
+  currentDevice = type;
+  var sizes = { pc: "100%", tablet: "768px", mobile: "390px" };
+  document.body.style.maxWidth = sizes[type];
+  document.body.style.margin = type === "pc" ? "0" : "0 auto";
+  document.querySelectorAll(".dbtn").forEach(function(b) { b.classList.remove("adev"); });
+  var topBtn = document.getElementById("dbtn-" + type);
+  if (topBtn) topBtn.classList.add("adev");
+  var grid = document.querySelector(".rg");
+  if (grid) grid.style.gridTemplateColumns = type === "pc" ? "1fr 1fr" : "1fr";
+  applyModalDevice(type);
+}function applyModalDevice(type) {
+  var modal = document.querySelector(".modal");
+  if (!modal) return;
+  modal.classList.remove("dev-pc", "dev-tablet", "dev-mobile");
+  modal.classList.add("dev-" + type);
+  document.querySelectorAll(".mdev .btn").forEach(function(b) { b.classList.remove("on"); });
+  var btn = document.getElementById("mdev-" + type);
+  if (btn) btn.classList.add("on");
+}function setModalDevice(type) {
+  currentDevice = type;
+  applyModalDevice(type);
+}function adminLogin() {
+  var pw = prompt("관리자 비밀번호를 입력하세요:");
+  if (!pw) return;
+  if (hpw(pw) === ADMIN_HASH) {
+    isAdmin = true;
+    _aKey = pw; // 평문을 런타임 메모리에만 저장 (소스에 없음)
+    document.getElementById("admin-badge").style.display = "flex";
+    document.getElementById("admin-login-btn").style.display = "none";
+    if (openP) setMac();
+  } else { alert("비밀번호가 틀렸어요."); }
+}function adminLogout() {
+  if (!confirm("로그아웃할까요?")) return;
+  isAdmin = false;
+  _aKey = null; // 메모리에서도 완전 제거
+  document.getElementById("admin-badge").style.display = "none";
+  document.getElementById("admin-login-btn").style.display = "flex";
+  if (openP) setMac();
+}function setFrameSrcdoc(frame, code) {
+  if (!frame) return;
+  // GitHub Pages 등 실제 웹주소 환경에서 srcdoc가 간헐적으로 비어 보이는 문제를 줄이기 위해
+  // Blob URL 방식으로 먼저 실행하고, 실패할 때만 srcdoc 방식으로 되돌립니다.
+  try {
+    if (frame._rpBlobUrl) {
+      URL.revokeObjectURL(frame._rpBlobUrl);
+      frame._rpBlobUrl = null;
+    }
+    var htmlCode = String(code || "");
+    // 기본 HTML 구조가 없어도 실행되도록 보정
+    if (!/<!doctype|<html[\s>]/i.test(htmlCode)) {
+      htmlCode = "<!DOCTYPE html><html><head><meta charset='UTF-8'></head><body>" + htmlCode + "</body></html>";
+    }
+    var blob = new Blob([htmlCode], { type: "text/html;charset=utf-8" });
+    var url = URL.createObjectURL(blob);
+    frame._rpBlobUrl = url;
+    frame.removeAttribute("srcdoc");
+    frame.src = "about:blank";
+    setTimeout(function() {
+      frame.src = url;
+    }, 30);
+  } catch (err) {
+    frame.src = "about:blank";
+    frame.srcdoc = "";
+    setTimeout(function() {
+      frame.srcdoc = String(code || "");
+    }, 30);
   }
-  if(curFlt!=="전체")f=f.filter(i=>i.tag===curFlt);
-  if(curSrt==="new")f.sort((a,b)=>new Date(b.date)-new Date(a.date));
-  else if(curSrt==="old")f.sort((a,b)=>new Date(a.date)-new Date(b.date));
-  else if(curSrt==="views")f.sort((a,b)=>b.views-a.views);
-  return f;
-}
-
-function bld(){
-  const g=document.getElementById("ggrid");
-  g.innerHTML="";
-  const list=gitems();
-  if(list.length===0){
-    g.innerHTML='<div class="gempty"><div class="ge">🛸</div><p>조건에 일치하는 물리 실험 시뮬레이션을 찾지 못했습니다.</p></div>';
+}function runCode() {
+  var el = document.getElementById("code-input");
+  var code = el ? el.value : "";
+  if (!code.trim()) {
+    document.getElementById("preview-frame").style.display = "none";
+    document.getElementById("pvph").style.display = "flex";
+    document.getElementById("rs").textContent = "";
     return;
   }
-  list.forEach(i=>{
-    const c=document.createElement("div");
-    c.className="card";
-    c.onclick=()=>viewItem(i.id);
-    let sym="⚛";
-    if(i.tag==="역학")sym="🏃";if(i.tag==="전기")sym="⚡";if(i.tag==="파동")sym="🌊";
-    if(i.tag==="열역학")sym="🔥";if(i.tag==="광학")sym="👁";if(i.tag==="교사자료")sym="👨‍🏫";
-    c.innerHTML=`
-      <div class="ct">${sym}<span class="view-badge">👁 ${i.views}</span></div>
-      <div class="cb">
-        <div class="cmeta"><span class="ctag tag-${i.tag}">${i.tag}</span><span class="cauthor">${i.author}</span></div>
-        <div class="ctitle">${i.title}</div>
-        <div class="cdesc">${i.desc}</div>
+  var f = document.getElementById("preview-frame");
+  document.getElementById("pvph").style.display = "none";
+  f.style.display = "block";
+  setFrameSrcdoc(f, code);
+  var t = new Date();
+  document.getElementById("rs").textContent = "실행 " + t.getHours() + ":" + String(t.getMinutes()).padStart(2,"0") + ":" + String(t.getSeconds()).padStart(2,"0");
+}function hkey(e) {
+  if (e.ctrlKey && e.key === "Enter") { e.preventDefault(); runCode(); }
+  if (e.key === "Tab") { e.preventDefault(); var el = e.target, s = el.selectionStart; el.value = el.value.slice(0,s) + "  " + el.value.slice(el.selectionEnd); el.selectionStart = el.selectionEnd = s + 2; }
+}function clearCode() {
+  if (!document.getElementById("code-input").value || !confirm("코드를 모두 지울까요?")) return;
+  document.getElementById("code-input").value = "";
+  document.getElementById("preview-frame").style.display = "none";
+  document.getElementById("pvph").style.display = "flex";
+  document.getElementById("rs").textContent = "";
+}function copyCode() {
+  var c = document.getElementById("code-input").value; if (!c) return;
+  navigator.clipboard.writeText(c).then(function() { var b = document.getElementById("cpbtn"); b.textContent = "복사됨 ✓"; setTimeout(function() { b.textContent = "복사"; }, 1500); });
+}function reloadPv() { var f = document.getElementById("preview-frame"); if (f.style.display === "none") return; var s = document.getElementById("code-input").value; setFrameSrcdoc(f, s); }
+function openFs() { var c = document.getElementById("code-input").value; if (!c.trim()) { alert("먼저 코드를 실행해주세요."); return; } setFrameSrcdoc(document.getElementById("fs-frame"), c); document.getElementById("fsov").classList.add("on"); }
+function closeFs() { document.getElementById("fsov").classList.remove("on"); document.getElementById("fs-frame").srcdoc = ""; }
+document.addEventListener("keydown", function(e) { if (e.key === "Escape") { closeFs(); closePwM(); closeQR(); } });
+function toggleUp() { document.getElementById("us").classList.toggle("open"); }
+function tvpw(id, btn) { var el = document.getElementById(id); el.type = el.type === "password" ? "text" : "password"; btn.textContent = el.type === "password" ? "👁" : "🙈"; }
+function showPublicPromptBox() {
+  var bg = document.getElementById("prompt-bg");
+  var body = document.getElementById("prompt-body");
+  if (!bg || !body) {
+    alert(PUBLIC_PROMPT || "공개용 정리 프롬프트를 찾을 수 없습니다.");
+    return;
+  }
+  body.textContent = PUBLIC_PROMPT || "";
+  bg.classList.add("on");
+}function closePromptBox() {
+  var bg = document.getElementById("prompt-bg");
+  if (bg) bg.classList.remove("on");
+}function copyPublicPromptFromBox() {
+  var text = PUBLIC_PROMPT || "";
+  if (!text.trim()) return;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function() {
+      alert("공개용 정리 프롬프트를 복사했습니다.");
+    }).catch(function() {
+      alert("자동 복사에 실패했습니다. 창에 표시된 프롬프트를 직접 드래그해서 복사해주세요.");
+    });
+  } else {
+    alert("이 브라우저에서는 자동 복사가 어렵습니다. 창에 표시된 프롬프트를 직접 드래그해서 복사해주세요.");
+  }
+}function copyPublicPrompt() {
+  showPublicPromptBox();
+}function fallbackCopy(text) {
+  var ta = document.createElement("textarea");
+  ta.value = text;
+  ta.style.position = "fixed"; ta.style.left = "-9999px";
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand("copy"); } catch(e) {}
+  document.body.removeChild(ta);
+}function findSensitiveIssues(items) {
+  var patterns = [
+    {name:"이메일 주소", re:/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i},
+    {name:"OpenAI API 키", re:/sk-(?:proj-)?[A-Za-z0-9_\-]{20,}/},
+    {name:"Google API 키", re:/AIza[0-9A-Za-z_\-]{20,}/},
+    {name:"GitHub 토큰", re:/github_pat_[A-Za-z0-9_]{20,}|ghp_[A-Za-z0-9]{20,}|gho_[A-Za-z0-9]{20,}/},
+    {name:"API 키/토큰/비밀번호 할당 표현", re:/(api[_-]?key|secret|token|access[_-]?token|password|passwd|비밀번호|인증코드)\s*[:=]\s*['"]?[^\s'"]{4,}/i},
+    {name:"전화번호처럼 보이는 값", re:/(01[016789])[- .]?\d{3,4}[- .]?\d{4}/}
+  ];
+  var issues = [];
+  items.forEach(function(item) {
+    var text = item.text || "";
+    patterns.forEach(function(p) {
+      if (p.re.test(text)) issues.push(item.label + " → " + p.name);
+    });
+  });
+  return issues;
+}function checkSensitiveBeforeSubmit(code, aiLog, publicReport) {
+  var issues = findSensitiveIssues([
+    {label:"최종 코드", text:code},
+    {label:"AI 대화 원문", text:aiLog},
+    {label:"공개용 제작 과정 보고서", text:publicReport}
+  ]);
+  if (issues.length) {
+    alert("개인정보 또는 API 키처럼 보이는 내용이 발견되어 업로드를 중단합니다.\n\n" + issues.join("\n") + "\n\n해당 내용을 삭제하거나 [개인정보 보호를 위해 생략함]으로 바꾼 뒤 다시 업로드하세요.");
+    return false;
+  }
+  return true;
+}function loadEx(i) { document.getElementById("code-input").value = EX[i]; runCode(); }
+function loadPosts() {
+  var grid = document.getElementById("gg");
+  grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text2);font-size:13px;opacity:.5">불러오는 중...</div>';
+  apiFetch("GET").then(function(data) {
+    if (data.status === "ok") { posts = data.posts || []; renderG(); }
+    else { grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--red);font-size:12px">오류: ' + (data.message || "알 수 없는 오류") + "</div>"; }
+  }).catch(function(e) { grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--red);font-size:12px">연결 오류: ' + e.message + "</div>"; });
+}var EMOJI = { "역학": "⚙", "전기": "⚡", "파동": "🌊", "열역학": "🌡", "광학": "💡", "기타": "🔬", "교사자료": "👨‍🏫" };
+var TBGC = { "역학": "#39FF14", "전기": "#00E5FF", "파동": "#FF5F1F", "열역학": "#FF1A75", "광학": "#9D00FF", "기타": "#0f1117", "교사자료": "#1a1200" };
+function esc(s) { var d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+function renderG() {
+  var grid = document.getElementById("gg");
+  var q = (document.getElementById("search-input") ? document.getElementById("search-input").value : "").toLowerCase();
+  var sort = document.getElementById("sort-sel") ? document.getElementById("sort-sel").value : "latest";
+  var list = posts.slice();
+  if (curF !== "all") list = list.filter(function(p) { return p.tag === curF; });
+  if (q) list = list.filter(function(p) { return (p.title || "").toLowerCase().indexOf(q) >= 0 || (p.author || "").toLowerCase().indexOf(q) >= 0; });
+  if (sort === "views") list.sort(function(a, b) { return (views[b.id] || 0) - (views[a.id] || 0); });
+  else if (sort === "title") list.sort(function(a, b) { return (a.title || "").localeCompare(b.title || "", "ko"); });
+  if (!list.length) {
+    var ei = curF === "all" ? "🔭" : "🔍";
+    var em = q ? '"' + q + '" 검색 결과가 없어요.' : curF === "all" ? "아직 작품이 없어요. 실행기에서 올려보세요!" : "이 단원의 작품이 없어요.";
+    grid.innerHTML = '<div class="gempty"><div class="ge">' + ei + '</div><p>' + em + '</p>' + (!q && curF === "all" ? '<button class="btn brun" id="go-runner-btn">실행기로 가기</button>' : "") + "</div>";
+    if (!q && curF === "all") { var rb = document.getElementById("go-runner-btn"); if (rb) rb.addEventListener("click", function() { sp("runner", document.getElementById("ntab-runner")); }); }
+    return;
+  }
+  var h = "";
+  list.forEach(function(p) {
+    var pid = String(p.id);
+    h += '<div class="card" data-id="' + esc(pid) + '">'
+      + '<div class="ct" style="background:' + (TBGC[p.tag] || "#111") + '">' + (EMOJI[p.tag] || "🔬") + '<div class="view-badge">👁 ' + (views[pid] || 0) + "</div></div>"
+      + '<div class="cb"><div class="ctitle">' + esc(p.title || "") + "</div>"
+      + '<div class="cmeta"><span class="cauthor">' + esc(p.author || "익명") + " · " + esc(p.date || "") + '</span><span class="ctag tag-' + (p.tag || "기타") + '">' + (p.tag || "기타") + "</span></div>"
+      + (p.desc ? '<div class="cdesc">' + esc(p.desc) + "</div>" : "")
+      + "</div></div>";
+  });
+  grid.innerHTML = h;
+  grid.querySelectorAll(".card").forEach(function(card) {
+    card.addEventListener("click", function() { openM(this.getAttribute("data-id")); });
+  });
+}function filterG(tag, btn) { curF = tag; document.querySelectorAll(".fbtn").forEach(function(b) { b.classList.remove("on"); }); btn.classList.add("on"); renderG(); }
+function switchSub(id, btn) {
+  document.querySelectorAll("[id^='sub-']").forEach(function(el) { el.style.display = "none"; });
+  document.querySelectorAll("[id^='subtab-']").forEach(function(b) { b.classList.remove("active"); });
+  document.getElementById("sub-" + id).style.display = "block";
+  btn.classList.add("active");
+  if (id === "student") loadPosts();
+}function postToG() {
+  var code = document.getElementById("code-input").value.trim();
+  var title = document.getElementById("utitle").value.trim();
+  var author = document.getElementById("uauthor").value.trim() || "익명";
+  var tag = document.getElementById("utag").value;
+  var desc = document.getElementById("udesc").value.trim();
+  var aiLog = document.getElementById("uailog") ? document.getElementById("uailog").value.trim() : "";
+  var publicReport = document.getElementById("upublicreport") ? document.getElementById("upublicreport").value.trim() : "";
+  var pw = document.getElementById("upw").value.trim();
+  var st = document.getElementById("ups");
+  if (!code) { setSt(st, "코드를 먼저 실행해주세요", "r"); return; }
+  if (!title) { setSt(st, "제목을 입력해주세요", "r"); document.getElementById("utitle").focus(); return; }
+  if (pw.length < 4) { setSt(st, "비밀번호 4자리 이상", "r"); document.getElementById("upw").focus(); return; }
+  if (!aiLog) { setSt(st, "AI 대화 원문을 입력해주세요", "r"); document.getElementById("uailog").focus(); return; }
+  if (!publicReport) { setSt(st, "공개용 제작 과정 보고서를 입력해주세요", "r"); document.getElementById("upublicreport").focus(); return; }
+  if (!checkSensitiveBeforeSubmit(code, aiLog, publicReport)) { setSt(st, "민감정보 의심 항목을 확인해주세요", "r"); return; }
+  setSt(st, "업로드 중...", "g");
+  document.getElementById("post-btn").disabled = true;
+  apiFetch("POST", { action: "add", title: title, author: author, tag: tag, desc: desc, code: code, aiLog: aiLog, publicReport: publicReport, pwHash: hpw(pw) }).then(function(data) {
+    document.getElementById("post-btn").disabled = false;
+    if (data.status === "ok") {
+      setSt(st, "✓ 업로드 완료! 갤러리로 이동합니다.", "g");
+      ["utitle","uauthor","udesc","upw","uailog"].forEach(function(id) { if (document.getElementById(id)) document.getElementById(id).value = ""; });
+      setTimeout(function() {
+        st.textContent = "";
+        document.getElementById("us").classList.remove("open");
+        sp("gallery", document.getElementById("ntab-gallery"));
+        loadPosts();
+      }, 700);
+    } else { setSt(st, "오류: " + (data.message || "실패"), "r"); }
+  }).catch(function(e) { document.getElementById("post-btn").disabled = false; setSt(st, "오류: " + e.message, "r"); });
+}function setSt(el, msg, t) { el.style.color = t === "r" ? "var(--red)" : "var(--green)"; el.textContent = msg; if (t === "r") setTimeout(function() { el.textContent = ""; }, 2500); }
+function openM(id) {
+  var p = null;
+  for (var i = 0; i < posts.length; i++) { if (String(posts[i].id) === String(id)) { p = posts[i]; break; } }
+  if (!p) return; openP = p;
+  views[id] = (views[id] || 0) + 1;
+  localStorage.setItem("rp_views", JSON.stringify(views));
+  document.getElementById("mttl").textContent = p.title || "";
+  document.getElementById("mmeta").textContent = (p.author || "익명") + " · " + (p.tag || "") + " · " + (p.date || "") + " · 👁 " + views[id];
+  document.getElementById("mdesc").textContent = p.desc || "";
+  var reportWrap = document.getElementById("report-wrap");
+  var reportBox = document.getElementById("mreport");
+  if (p.publicReport && String(p.publicReport).trim()) {
+    reportBox.textContent = p.publicReport;
+    reportWrap.style.display = "block";
+  } else {
+    reportBox.textContent = "";
+    reportWrap.style.display = "none";
+  }
+  setFrameSrcdoc(document.getElementById("modal-frame"), p.code || "");
+  document.getElementById("mbg").classList.add("on");
+  applyModalDevice(currentDevice);
+  setMac();
+}function setMac() {
+  var mac = document.getElementById("mac");
+  if (!mac) return;
+  var btns = '<div class="mdev"><span class="mdev-label">화면</span>'
+    + '<button class="btn" id="mdev-pc" onclick="setModalDevice(\'pc\')">PC</button>'
+    + '<button class="btn" id="mdev-tablet" onclick="setModalDevice(\'tablet\')">태블릿</button>'
+    + '<button class="btn" id="mdev-mobile" onclick="setModalDevice(\'mobile\')">모바일</button></div>'
+    + '<button class="btn brun" id="mac-fullscreen" style="font-size:11px">⛶ 전체화면</button>'
+    + '<button class="btn" id="mac-report" style="font-size:11px">📄 제작 과정</button>'
+    + '<button class="btn" id="mac-dl" style="font-size:11px">⬇ 다운로드</button>'
+    + '<button class="btn" id="mac-qr" style="font-size:11px">📱 QR</button>';
+  if (isAdmin) {
+    btns += '<button class="btn" id="mac-ai" style="font-size:11px">🧠 AI 대화 원문</button>';
+  }
+  btns += '<button class="btn bamber" id="mac-edit">✏ 수정</button>'
+    + '<button class="btn bdanger" id="mac-del">🗑 삭제</button>';
+  mac.innerHTML = btns;
+  applyModalDevice(currentDevice);
+  var fsBtn = document.getElementById("mac-fullscreen");
+  var reportBtn = document.getElementById("mac-report");
+  var dlBtn = document.getElementById("mac-dl");
+  var qrBtn = document.getElementById("mac-qr");
+  var aiBtn = document.getElementById("mac-ai");
+  var editBtn = document.getElementById("mac-edit");
+  var delBtn = document.getElementById("mac-del");
+  if (fsBtn) fsBtn.addEventListener("click", openPostFs);
+  if (reportBtn) reportBtn.addEventListener("click", showPublicReport);
+  if (dlBtn) dlBtn.addEventListener("click", downloadCode);
+  if (qrBtn) qrBtn.addEventListener("click", showQRforPost);
+  if (aiBtn) aiBtn.addEventListener("click", showAiLog);
+  if (editBtn) editBtn.addEventListener("click", function() { isAdmin ? openEditForm("ADMIN") : reqPw("edit"); });
+  if (delBtn) delBtn.addEventListener("click", function() { isAdmin ? adminDelete() : reqPw("delete"); });
+}function openPostFs() {
+  if (!openP || openP.code == null) {
+    alert("전체화면으로 볼 코드가 없습니다.");
+    return;
+  }
+  setFrameSrcdoc(document.getElementById("fs-frame"), openP.code || "");
+  document.getElementById("fsov").classList.add("on");
+}function closeM() { document.getElementById("mbg").classList.remove("on"); document.getElementById("modal-frame").srcdoc = ""; openP = null; }
+function loadToRunner() { if (!openP) return; document.getElementById("code-input").value = openP.code || ""; closeM(); sp("runner", document.getElementById("ntab-runner")); runCode(); }
+function downloadCode() {
+  if (!openP) return;
+  var blob = new Blob([openP.code || ""], { type: "text/html;charset=utf-8" });
+  var a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+  a.download = (openP.title || "simulation").replace(/[\/:*?"<>|]/g, "_") + ".html";
+  a.click(); URL.revokeObjectURL(a.href);
+}function showQR(url, title, desc) {
+  document.getElementById("qr-title").textContent = title || "QR 코드";
+  document.getElementById("qr-desc").textContent = desc || "";
+  document.getElementById("qr-url").textContent = url;
+  var canvas = document.getElementById("qr-canvas"); canvas.innerHTML = "";
+  new QRCode(canvas, { text: url, width: 180, height: 180, colorDark: "#000", colorLight: "#fff", correctLevel: QRCode.CorrectLevel.M });
+  document.getElementById("qr-bg").classList.add("on");
+}function showQRforPost() {
+  if (!openP) return;
+  var base = location.href.split("?")[0];
+  var fullUrl = base + "?post=" + openP.id + "&mode=full";
+  showQR(fullUrl, "📱 시뮬레이션 QR", '"' + (openP.title || "") + '" — 스캔하면 바로 실행됩니다');
+}function closeQR() { document.getElementById("qr-bg").classList.remove("on"); }
+function showAiLogForPost() {
+  if (!openP || !isAdmin) return;
+  apiFetch("POST", { action: "getAiLog", id: openP.id, adminPw: _aKey || "" }).then(function(data) {
+    if (data.status !== "ok") {
+      alert("AI 대화 기록을 불러오지 못했습니다: " + (data.message || "권한 오류"));
+      return;
+    }
+    var old = document.getElementById("ailog-bg");
+    if (old) old.remove();
+    var bg = document.createElement("div");
+    bg.id = "ailog-bg";
+    bg.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:420;display:flex;align-items:center;justify-content:center;padding:16px";
+    bg.innerHTML = ''
+      + '<div style="width:min(900px,100%);height:min(82vh,720px);background:var(--bg2);border:1px solid var(--borderB);border-radius:14px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.45)">'
+      + '  <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid var(--border);background:var(--bg3)">'
+      + '    <div><div style="font-size:14px;font-weight:700;color:var(--accent);font-family:var(--mono)">🧠 AI 대화 기록</div><div style="font-size:11px;color:var(--text2);margin-top:3px">관리자에게만 표시됩니다. 학생 갤러리 화면에는 공개되지 않습니다.</div></div>'
+      + '    <button class="btn bdanger" id="ailog-close" style="font-size:10px">✕ 닫기</button>'
+      + '  </div>'
+      + '  <div style="padding:12px 16px;border-bottom:1px solid var(--border);font-size:12px;color:var(--text2)">' + esc(data.title || openP.title || "") + '</div>'
+      + '  <textarea id="ailog-text" readonly style="flex:1;width:100%;background:var(--bg4);color:#cdd9e5;border:none;outline:none;font-family:var(--sans);font-size:12px;line-height:1.65;padding:14px 16px;resize:none;white-space:pre-wrap"></textarea>'
+      + '  <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 16px;border-top:1px solid var(--border);background:var(--bg3)">'
+      + '    <span style="font-size:11px;color:var(--text2);font-family:var(--mono)">prompt log</span>'
+      + '    <button class="btn" id="ailog-copy">복사</button>'
+      + '  </div>'
+      + '</div>';
+    document.body.appendChild(bg);
+    var txt = document.getElementById("ailog-text");
+    txt.value = data.aiLog && data.aiLog.trim() ? data.aiLog : "제출된 AI 대화 기록이 없습니다.";
+    document.getElementById("ailog-close").onclick = function() { bg.remove(); };
+    bg.addEventListener("click", function(e) { if (e.target === bg) bg.remove(); });
+    document.getElementById("ailog-copy").onclick = function() {
+      navigator.clipboard.writeText(txt.value).then(function() {
+        document.getElementById("ailog-copy").textContent = "복사됨 ✓";
+        setTimeout(function() { var b = document.getElementById("ailog-copy"); if (b) b.textContent = "복사"; }, 1500);
+      }).catch(function() { alert("복사에 실패했습니다. 직접 선택해서 복사해주세요."); });
+    };
+  }).catch(function(e) {
+    alert("AI 대화 기록 연결 오류: " + e.message);
+  });
+}function reqPw(act) {
+  if (!openP) return; pwAct = act;
+  document.getElementById("pmtitle").textContent = act === "edit" ? "수정 비밀번호 확인" : "삭제 비밀번호 확인";
+  document.getElementById("pmdesc").textContent = act === "delete" ? "삭제하면 복구할 수 없어요." : "수정할 내용을 확인해드릴게요.";
+  document.getElementById("pwinput").value = ""; document.getElementById("pwerr").textContent = "";
+  document.getElementById("pwmbg").classList.add("on");
+  setTimeout(function() { document.getElementById("pwinput").focus(); }, 100);
+}function closePwM() { document.getElementById("pwmbg").classList.remove("on"); pwAct = null; }
+function confPw() {
+  var pw = document.getElementById("pwinput").value.trim();
+  if (!pw) { document.getElementById("pwerr").textContent = "비밀번호를 입력해주세요."; return; }
+  if (!openP) { closePwM(); return; }
+  var pwHash = hpw(pw);
+  if (pwAct === "delete") {
+    if (!confirm('"' + (openP.title || "") + '"을(를) 삭제할까요?')) return;
+    closePwM();
+    apiFetch("POST", { action: "delete", id: openP.id, pwHash: pwHash }).then(function(data) {
+      if (data.status === "ok") { closeM(); loadPosts(); } else { alert("오류: " + (data.message || "삭제 실패")); }
+    });
+  } else if (pwAct === "edit") {
+    closePwM();
+    openEditForm(pwHash);
+  }
+}function openEditForm(pwHash) {
+  if (!openP) return;
+  var old = document.getElementById("edit-bg");
+  if (old) old.remove();
+  var bg = document.createElement("div");
+  bg.id = "edit-bg";
+  bg.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:400;display:flex;align-items:center;justify-content:center;padding:16px";
+  bg.innerHTML = ''
+    + '<div style="width:min(980px,100%);height:min(88vh,760px);background:var(--bg2);border:1px solid var(--borderB);border-radius:14px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.45)">'
+    + '  <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid var(--border);background:var(--bg3)">'
+    + '    <div><div style="font-size:14px;font-weight:700;color:var(--accent);font-family:var(--mono)">✏ 작품 수정</div><div style="font-size:11px;color:var(--text2);margin-top:3px">제목, 설명, HTML 코드를 함께 수정할 수 있습니다.</div></div>'
+    + '    <button class="btn bdanger" id="edit-close" style="font-size:10px">✕ 닫기</button>'
+    + '  </div>'
+    + '  <div style="padding:14px 16px;display:grid;grid-template-columns:1fr 1fr;gap:10px;border-bottom:1px solid var(--border)">'
+    + '    <div class="fg"><label>제목 *</label><input id="edit-title" type="text"></div>'
+    + '    <div class="fg"><label>설명</label><input id="edit-desc" type="text"></div>'
+    + '    <div class="fg" style="grid-column:1/-1"><label>공개용 제작 과정 보고서</label><textarea id="edit-public-report" style="min-height:90px"></textarea></div>'
+    + '  </div>'
+    + '  <textarea id="edit-code" spellcheck="false" style="flex:1;width:100%;background:var(--bg4);color:#cdd9e5;border:none;outline:none;font-family:var(--mono);font-size:12.5px;line-height:1.7;padding:14px 16px;resize:none;tab-size:2"></textarea>'
+    + '  <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 16px;border-top:1px solid var(--border);background:var(--bg3)">'
+    + '    <span id="edit-status" style="font-size:11px;font-family:var(--mono);color:var(--text2)"></span>'
+    + '    <div style="display:flex;gap:7px"><button class="btn" id="edit-preview">미리보기 확인</button><button class="btn bup" id="edit-save">저장하기</button></div>'
+    + '  </div>'
+    + '</div>';
+  document.body.appendChild(bg);
+  document.getElementById("edit-title").value = openP.title || "";
+  document.getElementById("edit-desc").value = openP.desc || "";
+  document.getElementById("edit-public-report").value = openP.publicReport || "";
+  document.getElementById("edit-code").value = openP.code || "";
+  document.getElementById("edit-close").onclick = closeEditForm;
+  bg.addEventListener("click", function(e) { if (e.target === bg) closeEditForm(); });
+  // Tab 들여쓰기만 처리 (Ctrl+Enter는 의도적으로 제외)
+  document.getElementById("edit-code").addEventListener("keydown", function(e) {
+    if (e.key === "Tab") { e.preventDefault(); var el = e.target, s = el.selectionStart; el.value = el.value.slice(0,s) + "  " + el.value.slice(el.selectionEnd); el.selectionStart = el.selectionEnd = s + 2; }
+  });
+  document.getElementById("edit-preview").onclick = function() {
+    var code = document.getElementById("edit-code").value;
+    if (!code.trim()) { alert("미리보기할 코드가 없습니다."); return; }
+    document.getElementById("code-input").value = code;
+    closeEditForm();
+    closeM();
+    sp("runner", document.getElementById("ntab-runner"));
+    runCode();
+  };
+  document.getElementById("edit-save").onclick = function() { saveEditForm(pwHash); };
+  setTimeout(function() { document.getElementById("edit-title").focus(); }, 80);
+}function closeEditForm() {
+  var bg = document.getElementById("edit-bg");
+  if (bg) bg.remove();
+}function saveEditForm(pwHash) {
+  if (!openP) return;
+  var title = document.getElementById("edit-title").value.trim();
+  var desc = document.getElementById("edit-desc").value.trim();
+  var publicReport = document.getElementById("edit-public-report").value.trim();
+  var code = document.getElementById("edit-code").value;
+  var st = document.getElementById("edit-status");
+  if (!title) { st.style.color = "var(--red)"; st.textContent = "제목을 입력해주세요."; return; }
+  if (!code.trim()) { st.style.color = "var(--red)"; st.textContent = "코드를 입력해주세요."; return; }
+  if (!publicReport) { st.style.color = "var(--red)"; st.textContent = "공개용 제작 과정 보고서를 입력해주세요."; return; }
+  if (!checkSensitiveBeforeSubmit(code, "", publicReport)) { st.style.color = "var(--red)"; st.textContent = "민감정보 의심 항목을 확인해주세요."; return; }
+  st.style.color = "var(--green)";
+  st.textContent = "저장 중...";
+  document.getElementById("edit-save").disabled = true;
+  apiFetch("POST", { action: "edit", id: openP.id, pwHash: pwHash, title: title, desc: desc, code: code, publicReport: publicReport, adminPw: _aKey || "" }).then(function(data) {
+    document.getElementById("edit-save").disabled = false;
+    if (data.status === "ok") {
+      st.textContent = "✓ 수정 완료";
+      closeEditForm();
+      closeM();
+      loadPosts();
+    } else {
+      st.style.color = "var(--red)";
+      st.textContent = "오류: " + (data.message || "수정 실패");
+    }
+  }).catch(function(e) {
+    document.getElementById("edit-save").disabled = false;
+    st.style.color = "var(--red)";
+    st.textContent = "오류: " + e.message;
+  });
+}function adminEdit() {
+  if (!openP || !isAdmin) return;
+  openEditForm("ADMIN");
+}function adminDelete() {
+  if (!openP || !isAdmin) return;
+  if (!confirm('"' + (openP.title || "") + '"을(를) 삭제할까요?')) return;
+  apiFetch("POST", { action: "delete", id: openP.id, pwHash: "ADMIN", adminPw: _aKey || "" }).then(function(data) {
+    if (data.status === "ok") { closeM(); loadPosts(); } else { alert("오류: " + (data.message || "삭제 실패")); }
+  });
+}// ── QR 링크 처리 ───────────────────────────────────────────
+(function() {
+  var params = new URLSearchParams(location.search);
+  var pid  = params.get("post");
+  var mode = params.get("mode");
+  if (!pid) return;
+  if (mode === "full") {
+    // ── 키오스크 모드: UI 전체 숨기고 시뮬레이션만 전체화면으로 실행 ──
+    var style = document.createElement("style");
+    style.textContent = [
+      "header, .exbar, .mob-nav, .fsov .fsbar { display:none !important }",
+      "body { overflow:hidden }",
+      "#kiosk-frame {",
+      "  position:fixed; inset:0; width:100%; height:100%;",
+      "  border:none; z-index:9999; background:#000;",
+      "}"
+    ].join("\n");
+    document.head.appendChild(style);
+    // 로딩 오버레이
+    var overlay = document.createElement("div");
+    overlay.id = "kiosk-overlay";
+    overlay.style.cssText = "position:fixed;inset:0;background:#0a0e1a;z-index:9998;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px";
+    overlay.innerHTML = '<div style="font-family:\'Space Mono\',monospace;font-size:13px;color:#00d4ff;opacity:.7">시뮬레이션 불러오는 중...</div>';
+    document.body.appendChild(overlay);
+    apiFetch("GET").then(function(data) {
+      if (data.status !== "ok") { overlay.innerHTML = '<div style="color:#f87171;font-family:monospace;font-size:13px">불러오기 실패</div>'; return; }
+      var post = (data.posts || []).filter(function(p) { return String(p.id) === String(pid); })[0];
+      if (!post || !post.code) { overlay.innerHTML = '<div style="color:#f87171;font-family:monospace;font-size:13px">작품을 찾을 수 없습니다</div>'; return; }
+      var frame = document.createElement("iframe");
+      frame.id = "kiosk-frame";
+      frame.setAttribute("sandbox", "allow-scripts allow-modals allow-forms allow-popups allow-downloads");
+      document.body.appendChild(frame);
+      // 제목 오버레이 (3초 후 자동 숨김)
+      var titleBar = document.createElement("div");
+      titleBar.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:10000;padding:10px 18px;background:rgba(10,14,26,.85);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:space-between;transition:opacity .5s";
+      titleBar.innerHTML = '<span style="font-family:\'Space Mono\',monospace;font-size:12px;color:#00d4ff">' + (post.title || "") + '</span>'
+        + '<a href="' + location.href.split("?")[0] + '" style="font-family:monospace;font-size:11px;color:#8892a4;text-decoration:none">Class Physics</a>';
+      document.body.appendChild(titleBar);
+      setTimeout(function() { titleBar.style.opacity = "0"; setTimeout(function() { titleBar.style.display = "none"; }, 500); }, 3000);
+      setFrameSrcdoc(frame, post.code);
+      overlay.remove();
+    }).catch(function() {
+      overlay.innerHTML = '<div style="color:#f87171;font-family:monospace;font-size:13px">연결 오류</div>';
+    });
+  } else {
+    // ── 일반 모드: 갤러리로 이동 후 해당 작품 모달을 안정적으로 오픈 ──
+    // 기존 방식은 apiFetch를 나중에 감싸서 첫 loadPosts() 결과를 놓칠 수 있었음.
+    // 그래서 직접 게시글을 다시 불러온 뒤 renderG() → openM(pid) 순서로 실행한다.
+    sp("gallery", document.getElementById("ntab-gallery"));
+    var grid = document.getElementById("gg");
+    if (grid) {
+      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text2);font-size:13px;opacity:.5">작품을 불러오는 중...</div>';
+    }
+    apiFetch("GET").then(function(data) {
+      if (data.status !== "ok") {
+        if (grid) {
+          grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--red);font-size:12px">작품을 불러오지 못했습니다.</div>';
+        }
+        return;
+      }
+      posts = data.posts || [];
+      renderG();
+      var exists = posts.some(function(p) { return String(p.id) === String(pid); });
+      if (!exists) {
+        if (grid) {
+          grid.insertAdjacentHTML("afterbegin", '<div style="grid-column:1/-1;text-align:center;padding:14px;color:var(--amber);font-size:12px;border:1px solid rgba(245,158,11,.25);border-radius:10px;margin-bottom:8px;background:rgba(245,158,11,.06)">QR 링크의 작품을 찾을 수 없습니다. 삭제되었거나 주소가 잘못되었을 수 있어요.</div>');
+        }
+        return;
+      }
+      setTimeout(function() {
+        openM(pid);
+      }, 120);
+    }).catch(function(e) {
+      if (grid) {
+        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--red);font-size:12px">연결 오류: ' + esc(e.message || e) + '</div>';
+      }
+    });
+  }
+})();
+// ──────────────────────────────────────────────────────────
+function showReportBox(title, desc, content) {
+  var bg = document.getElementById("report-bg");
+  var tt = document.getElementById("report-title");
+  var ds = document.getElementById("report-desc");
+  var bd = document.getElementById("report-body");
+  if (!bg || !tt || !ds || !bd) {
+    alert(content || "표시할 내용이 없습니다.");
+    return;
+  }
+  tt.textContent = title || "제작 과정 보고서";
+  ds.textContent = desc || "공개용 자료입니다.";
+  bd.textContent = content && String(content).trim()
+    ? String(content)
+    : "제출된 내용이 없습니다.";
+  bg.classList.add("on");
+}function closeReportBox() {
+  var bg = document.getElementById("report-bg");
+  if (bg) bg.classList.remove("on");
+}function copyReportBox() {
+  var bd = document.getElementById("report-body");
+  if (!bd) return;
+  var text = bd.textContent || "";
+  if (!text.trim()) return;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function() {
+      alert("복사했습니다.");
+    }).catch(function() {
+      alert("복사에 실패했습니다. 내용을 직접 드래그해서 복사해주세요.");
+    });
+  } else {
+    alert("이 브라우저에서는 자동 복사가 어렵습니다. 내용을 직접 드래그해서 복사해주세요.");
+  }
+}function showPublicReport() {
+  if (!openP) return;
+  showReportBox(
+    "📄 제작 과정 보고서",
+    "갤러리에서 모두에게 공개되는 제작 과정 정리본입니다.",
+    openP.publicReport || ""
+  );
+}function showAiLog() {
+  if (!openP) return;
+  apiFetch("POST", {
+    action: "getAiLog",
+    id: openP.id,
+    adminPw: _aKey || ""
+  }).then(function(data) {
+    if (data.status === "ok") {
+      showReportBox(
+        "🧠 AI 대화 원문",
+        "관리자에게만 표시됩니다. 학생 갤러리 화면에는 공개되지 않습니다.",
+        data.aiLog || "제출된 AI 대화 기록이 없습니다."
+      );
+    } else {
+      alert("AI 대화 기록을 불러오지 못했습니다: " + (data.message || "알 수 없는 오류"));
+    }
+  }).catch(function(e) {
+    alert("AI 대화 기록을 불러오지 못했습니다: " + e.message);
+  });
+}function applyTheme(mode) {
+  var isLight = mode === "light";
+  document.body.classList.toggle("light-mode", isLight);
+  try { localStorage.setItem("rp_theme", mode); } catch(e) {}
+  var btn = document.getElementById("theme-toggle");
+  if (btn) {
+    btn.textContent = isLight ? "🌙 다크모드" : "☀ 라이트모드";
+    btn.title = isLight ? "다크모드로 전환" : "라이트모드로 전환";
+  }
+}function toggleTheme() {
+  var next = document.body.classList.contains("light-mode") ? "dark" : "light";
+  applyTheme(next);
+}(function initTheme() {
+  var saved = "dark";
+  try { saved = localStorage.getItem("rp_theme") || "dark"; } catch(e) {}
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function(){ applyTheme(saved); });
+  } else {
+    applyTheme(saved);
+  }
+})();
+// 게시글 데이터를 브라우저 로컬 스토리지에 저장
+let boardData = JSON.parse(localStorage.getItem('class_physics_board')) || [];
+
+// 게시판 목록을 화면에 그려주는 함수
+function renderBoard() {
+  const list = document.getElementById('board-list');
+  if (!list) return;
+  list.innerHTML = '';
+  
+  if (boardData.length === 0) {
+    list.innerHTML = '<div class="gempty"><div class="ge">&#128196;</div><p>등록된 게시글이 없습니다.</p></div>';
+    return;
+  }
+  
+  // 기존 코드에 존재하는 '관리자 배지'의 노출 여부로 관리자 모드 판단
+  const adminBadge = document.getElementById('admin-badge');
+  const isAdmin = adminBadge && adminBadge.style.display !== 'none';
+
+  // 최신 글이 위로 오도록 역순으로 출력
+  [...boardData].reverse().forEach((post, reversedIndex) => {
+    // 실제 배열 인덱스
+    const index = boardData.length - 1 - reversedIndex; 
+    
+    // 비밀번호가 존재하면 비밀글로 처리
+    const isSecret = post.password && post.password.trim() !== '';
+    const canView = !isSecret || isAdmin;
+    
+    let contentHtml = '';
+    
+    if (canView) {
+      // 일반글이거나 관리자가 열람하는 경우 (내용 및 파일 다운로드 전체 노출)
+      contentHtml = `
+        <div style="margin-top: 10px; font-size: 12.5px; color: var(--text); white-space: pre-wrap; line-height: 1.6;">${post.content}</div>
+        ${post.fileUrl ? `<div style="margin-top: 10px;"><a href="${post.fileUrl}" download="${post.fileName}" class="btn" style="text-decoration: none;">&#128190; 첨부파일: ${post.fileName} 다운로드</a></div>` : ''}
+      `;
+    } else {
+      // 비밀글일 경우 비밀번호 입력 필드 표시
+      contentHtml = `
+        <div style="margin-top: 10px; padding: 10px; background: var(--bg4); border-radius: 6px; display: inline-flex; gap: 6px; align-items: center;">
+          <input type="password" id="pw-check-${index}" placeholder="비밀번호" style="padding: 4px 8px; font-size: 11px; border: 1px solid var(--border); border-radius: 4px; outline: none;">
+          <button class="btn" onclick="checkBoardPw(${index})" style="padding: 4px 10px;">확인</button>
+        </div>
+        <div id="secret-content-${index}" style="display: none; margin-top: 10px; font-size: 12.5px; color: var(--text); white-space: pre-wrap; line-height: 1.6;">
+          ${post.content}
+          ${post.fileUrl ? `<div style="margin-top: 10px;"><a href="${post.fileUrl}" download="${post.fileName}" class="btn" style="text-decoration: none;">&#128190; 첨부파일: ${post.fileName} 다운로드</a></div>` : ''}
+        </div>
+      `;
+    }
+
+    const postEl = document.createElement('div');
+    postEl.className = 'card';
+    postEl.style.padding = '18px';
+    postEl.innerHTML = `
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
+        <h4 style="font-size: 14px; font-weight: 700; color: var(--text);">
+          ${isSecret ? '<span style="color:var(--accent);">&#128274; 비밀글</span> ' : ''} ${post.title}
+        </h4>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 11px; color: var(--text2);">${post.date}</span>
+          ${isAdmin ? `<button class="btn bdanger" style="font-size: 10px; padding: 3px 6px;" onclick="deleteBoardPost(${index})">삭제</button>` : ''}
+        </div>
       </div>
+      ${contentHtml}
     `;
-    g.appendChild(c);
+    list.appendChild(postEl);
   });
 }
 
-function sp(p,btn){
-  document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
-  document.querySelectorAll(".nav-tab").forEach(x=>x.classList.remove("active"));
-  document.getElementById("page-"+p).classList.add("active");
-  if(btn)btn.classList.add("active");
-  else {
-    const pbtn=document.getElementById("ntab-"+p);
-    if(pbtn)pbtn.classList.add("active");
-  }
-  if(p==='gallery')bld();
-  if(p==='board')renderBoardList();
-}
+// 새 글 등록 기능
+function addBoardPost() {
+  const title = document.getElementById('board-title').value;
+  const content = document.getElementById('board-content').value;
+  const pw = document.getElementById('board-pw').value;
+  const fileInput = document.getElementById('board-file');
 
-function toggleMob(){document.getElementById("mob-nav").classList.toggle("open")}
-function closeMob(){document.getElementById("mob-nav").classList.remove("open")}
-
-let tm="dark";
-function toggleTheme(){
-  const b=document.body;
-  const t=document.getElementById("theme-toggle");
-  if(b.classList.contains("light-mode")){
-    b.classList.remove("light-mode");
-    t.innerText="☀ 라이트모드";
-    tm="dark";
-  }else{
-    b.classList.add("light-mode");
-    t.innerText="🌙 다크모드";
-    tm="light";
-  }
-  try{localStorage.setItem("rp_theme",tm)}catch(e){}
-}
-
-function runCode(){
-  const code=document.getElementById("code-input").value;
-  const f=document.getElementById("preview-frame");
-  const ph=document.getElementById("pvph");
-  if(!code.trim()){alert("실행할 코드를 입력해 주세요.");return}
-  ph.style.display="none";
-  f.style.display="block";
-  const blob=new Blob([code],{type:"text/html"});
-  f.src=URL.createObjectURL(blob);
-  document.getElementById("rs").innerText="정상 출력됨";
-}
-function clearCode(){document.getElementById("code-input").value="";reloadPv()}
-function reloadPv(){
-  const f=document.getElementById("preview-frame");
-  f.src="about:blank";f.style.display="none";
-  document.getElementById("pvph").style.display="flex";
-  document.getElementById("rs").innerText="";
-}
-function copyCode(){
-  const t=document.getElementById("code-input");
-  t.select();document.execCommand("copy");
-  const b=document.getElementById("cpbtn");b.innerText="복사 완료!";
-  setTimeout(()=>{b.innerText="복사"},1200);
-}
-function hkey(e){
-  if(e.key==='Tab'){e.preventDefault();const t=e.target,s=t.selectionStart,en=t.selectionEnd;t.value=t.value.substring(0,s)+"\t"+t.value.substring(en);t.selectionStart=t.selectionEnd=s+1}
-  if(e.ctrlKey&&e.key==='Enter'){e.preventDefault();runCode()}
-}
-function setDevice(d){
-  const p=document.getElementById("preview-frame").parentElement;
-  document.querySelectorAll(".dbtn").forEach(x=>x.classList.remove("adev"));
-  document.getElementById("dbtn-"+d).classList.add("adev");
-  if(d==='pc'){p.style.maxWidth="100%";p.style.height="100%"}
-  if(d==='tablet'){p.style.maxWidth="768px";p.style.height="95%"}
-  if(d==='mobile'){p.style.maxWidth="412px";p.style.height="85%"}
-}
-
-function openFs(){
-  const code=document.getElementById("code-input").value;
-  if(!code.trim()){alert("실행할 내용이 없습니다.");return}
-  const f=document.getElementById("fs-frame");
-  document.getElementById("fsov").classList.add("on");
-  const blob=new Blob([code],{type:"text/html"});
-  f.src=URL.createObjectURL(blob);
-}
-function closeFs(){document.getElementById("fsov").classList.remove("on");document.getElementById("fs-frame").src="about:blank"}
-function toggleUp(){document.getElementById("us").classList.toggle("open")}
-
-function submitUp(){
-  const t=document.getElementById("utitle").value.trim();
-  const a=document.getElementById("uauthor").value.trim()||"익명물리인";
-  const tg=document.getElementById("utag").value;
-  const p=document.getElementById("upw").value.trim();
-  const d=document.getElementById("udesc").value.trim();
-  const c=document.getElementById("code-input").value;
-  if(!t||!p||!d||!c.trim()){alert("필수 입력란(*) 정보 및 에디터 코드가 채워져야 갤러리에 업로드 가능합니다.");return}
-  if(p.length<4){alert("안전한 수정을 위해 패스워드는 4자리 이상으로 설정바랍니다.");return}
-  const now=new Date();
-  const dstr=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
-  const ni={id:"item_"+Date.now(),title:t,author:a,tag:tg,pw:p,desc:d,code:c,views:0,date:dstr};
-  items.unshift(ni);svs();alert("물리 시뮬레이션 공유가 정상 등록되었습니다!");
-  document.getElementById("utitle").value="";document.getElementById("upw").value="";document.getElementById("udesc").value="";
-  toggleUp();sp("gallery");
-}
-function tupw(){const x=document.getElementById("upw");x.type=x.type==="password"?"text":"password"}
-
-let cid=null,act=null;
-function viewItem(id){
-  const i=items.find(x=>x.id===id);if(!i)return;
-  cid=id;i.views++;svs();
-  document.getElementById("mttl").innerText=i.title;
-  document.getElementById("mmeta").innerText=`단원: ${i.tag} | 작성자: ${i.author} | 등록일: ${i.date}`;
-  document.getElementById("mdesc").innerText=i.desc;
-  const f=document.getElementById("modal-frame");
-  const blob=new Blob([i.code],{type:"text/html"});
-  f.src=URL.createObjectURL(blob);
-  mdv('pc');
-  document.getElementById("md").classList.add("on");
-}
-function cls(){document.getElementById("md").classList.remove("on");document.getElementById("modal-frame").src="about:blank";cid=null}
-function mdv(d){
-  const b=document.getElementById("mdbox");
-  b.classList.remove("dev-pc","dev-tablet","dev-mobile");
-  document.querySelectorAll(".mdev .btn").forEach(x=>x.classList.remove("on"));
-  if(d==='pc'){b.classList.add("dev-pc");document.getElementById("mdev-pc").classList.add("on")}
-  if(d==='tablet'){b.classList.add("dev-tablet");document.getElementById("mdev-tablet").classList.add("on")}
-  if(d==='mobile'){b.classList.add("dev-mobile");document.getElementById("mdev-mobile").classList.add("on")}
-}
-function sch(){curSrt=document.getElementById("gsort").value;bld()}
-function flt(t,btn){
-  curFlt=t;
-  document.querySelectorAll("#fzone .fbtn").forEach(x=>x.classList.remove("on"));
-  btn.classList.add("on");bld();
-}
-function mqr(){
-  const i=items.find(x=>x.id===cid);if(!i)return;
-  document.getElementById("qrt").innerText=i.title;
-  const u=window.location.href.split('?')[0]+"?sim="+cid;
-  document.getElementById("qru").innerText=u;
-  const c=document.getElementById("qr-canvas");c.innerHTML="";
-  new QRCode(c,{text:u,width:140,height:140});
-  document.getElementById("qrbg").classList.add("on");
-}
-
-function loadEx(type){
-  if(type==='pendulum') document.getElementById("code-input").value=def[0].code;
-  if(type==='wave') document.getElementById("code-input").value=def[1].code;
-  if(type==='thermo') document.getElementById("code-input").value=def[2].code;
-  if(type==='ohm') document.getElementById("code-input").value=`<!DOCTYPE html><html><head><style>body{background:#111;color:#fff;text-align:center;font-family:sans-serif;padding:10px}input{width:140px;margin:8px}</style></head><body><h4>옴의 법칙 가상 실험 (Ohm's Law)</h4><p>전압(V) = 전류(I) &times; 저항(R)</p><div>전압: <input type="range" id="v" min="1" max="24" value="12"> <span id="vv">12</span> V</div><div>저항: <input type="range" id="r" min="1" max="100" value="20"> <span id="rv">20</span> &Omega;</div><h3 style="color:#00d97e;margin-top:20px">측정 전류(I) = <span id="iv">0.60</span> A</h3><script>const V=document.getElementById('v'),R=document.getElementById('r');function calc(){let v=parseFloat(V.value),r=parseFloat(R.value);document.getElementById('vv').innerText=v;document.getElementById('rv').innerText=r;document.getElementById('iv').innerText=(v/r).toFixed(2)}V.oninput=calc;R.oninput=calc;<\/script></body></html>`;
-  if(type==='lens') document.getElementById("code-input").value=`<!DOCTYPE html><html><head><style>body{background:#000;color:#fff;text-align:center;margin:0;overflow:hidden}canvas{background:#111;display:block;margin:10px auto;border:1px solid #334155}</style></head><body><h5 style="margin:5px;color:#a78bfa">볼록렌즈 광선 굴절 추적 (Lens Ray Tracing)</h5><canvas id="l" width="480" height="220"></canvas><p style="font-size:11px;color:#64748b;margin:0">마우스를 움직여 광선의 입사각 위치를 실시간 추적하세요</p><script>const c=document.getElementById('l'),ctx=c.getContext('2d');let my=110;c.onmousemove=(e)=>{const rect=c.getBoundingClientRect();my=e.clientY-rect.top};function draw(){ctx.clearRect(0,0,480,220);ctx.strokeStyle='#334155';ctx.beginPath();ctx.moveTo(0,110);ctx.lineTo(480,110);ctx.stroke();ctx.fillStyle='rgba(14,165,233,0.2)';ctx.strokeStyle='#0ea5e9';ctx.beginPath();ctx.arc(240,-190,300,0.4,Math.PI-0.4);ctx.arc(240,410,300,Math.PI+0.4,-0.4);ctx.fill();ctx.stroke();ctx.strokeStyle='#ff007f';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(10,my);ctx.lineTo(235,my);let f=120,dx=235-240;let dy=my-110;let nx=470,ny=110-dy;ctx.lineTo(245,my);ctx.lineTo(360,110);ctx.lineTo(470,110-(110-my)*(-1));ctx.stroke();requestAnimationFrame(draw)}draw();<\/script></body></html>`;
-  reloadPv();
-}
-
-let adm=false;
-function adminLogin(){
-  const p=prompt("🔐 관리자 승인 패스워드를 입력하세요:");
-  if(p==="434582"){ 
-    adm=true;
-    document.getElementById("admin-login-btn").style.display="none";
-    document.getElementById("admin-badge").style.display="flex";
-    alert("👨‍🏫 최태현 선생님 관리자 모드로 로그인 연동되었습니다.");
-    if(document.getElementById("page-board").classList.contains("active")) renderBoardList();
-  }else if(p!==null){
-    alert("인증 실패: 올바른 암호가 아닙니다.");
-  }
-}
-function adminLogout(){
-  adm=false;
-  document.getElementById("admin-login-btn").style.display="inline-block";
-  document.getElementById("admin-badge").style.display="none";
-  alert("로그아웃 완료");
-  if(document.getElementById("page-board").classList.contains("active")) renderBoardList();
-}
-
-function med(){act="edit";openPwBox()}
-function mdel(){act="del";openPwBox()}
-function openPwBox(){
-  const i=items.find(x=>x.id===cid);if(!i)return;
-  if(adm){opw();return}
-  document.getElementById("pwmip").value="";
-  document.getElementById("pwerr").innerText="";
-  document.getElementById("pwmbg").classList.add("on");
-}
-function cpw(){document.getElementById("pwmbg").classList.remove("on")}
-function tpwm(){const x=document.getElementById("pwmip");x.type=x.type==="password"?"text":"password"}
-function opw(){
-  const i=items.find(x=>x.id===cid);if(!i)return;
-  if(!adm){
-    const p=document.getElementById("pwmip").value.trim();
-    if(p!==i.pw){document.getElementById("pwerr").innerText="✖ 설정 암호가 틀렸습니다.";return}
-  }
-  cpw();
-  if(act==="edit"){
-    document.getElementById("code-input").value=i.code;
-    runCode();cls();sp("runner");
-    document.getElementById("utitle").value=i.title;
-    document.getElementById("udesc").value=i.desc;
-    document.getElementById("us").classList.add("open");
-    alert("가져온 코드를 수정 완료한 뒤 업로드를 다시 누르시면 반영됩니다.");
-  }
-  if(act==="del"){
-    if(confirm("이 시뮬레이션을 갤러리에서 완전히 제거할까요?")){
-      items=items.filter(x=>x.id!==cid);svs();cls();bld();
-    }
-  }
-}
-
-// ==================== [자유 게시판 데이터 핸들링 로직 - 디버깅 완료] ====================
-let boardPosts = [];
-
-function loadBoardPosts() {
-  try {
-    const saved = localStorage.getItem("physics_board_posts");
-    boardPosts = saved ? JSON.parse(saved) : [];
-  } catch(e) {
-    boardPosts = [];
-  }
-}
-
-function saveBoardPostsToStorage() {
-  localStorage.setItem("physics_board_posts", JSON.stringify(boardPosts));
-}
-
-function renderBoardList() {
-  const tbody = document.getElementById("board-list-tbody");
-  if (!tbody) return;
-  tbody.innerHTML = "";
-
-  if (boardPosts.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:30px; color:var(--text2); opacity:0.6;">등록된 게시글이 없습니다. 첫 글을 작성해보세요!</td></tr>`;
+  if (!title || !content) {
+    alert("제목과 내용을 모두 입력해주세요.");
     return;
   }
 
-  // 역순 출력 루프 처리
-  for (let i = boardPosts.length - 1; i >= 0; i--) {
-    const post = boardPosts[i];
-    const isSecret = post.password && post.password.trim() !== "";
-    const titleDisplay = isSecret ? `🔒 비밀글입니다.` : post.title;
-    
-    const tr = document.createElement("tr");
-    tr.style.borderBottom = "1px solid var(--border)";
-    tr.style.cursor = "pointer";
-    tr.className = "board-tr-hover";
-    
-    // ★ 디버깅 포인트: 고정값 i를 정확하게 인수로 바인딩하여 꼬임 방지
-    tr.onclick = (function(idx) {
-      return function() { viewBoardPost(idx); };
-    })(i);
-
-    tr.innerHTML = `
-      <td style="padding: 12px 5px; color: var(--text2);">${i + 1}</td>
-      <td style="padding: 12px 5px; font-weight: ${isSecret ? 'normal' : '500'};">${titleDisplay}</td>
-      <td style="padding: 12px 5px; color: var(--text2);">${post.author}</td>
-      <td style="padding: 12px 5px; color: var(--text2); font-size:12px;">${post.date}</td>
-    `;
-    tbody.appendChild(tr);
-  }
-}
-
-function openBoardWrite() {
-  document.getElementById("board-write-modal").classList.add("on");
-}
-function closeBoardWrite() {
-  document.getElementById("board-write-modal").classList.remove("on");
-  document.getElementById("board-author").value = "";
-  document.getElementById("board-title").value = "";
-  document.getElementById("board-content").value = "";
-  document.getElementById("board-pw").value = "";
-  document.getElementById("board-file").value = "";
-}
-
-function saveBoardPost() {
-  const author = document.getElementById("board-author").value.trim();
-  const title = document.getElementById("board-title").value.trim();
-  const content = document.getElementById("board-content").value.trim();
-  const password = document.getElementById("board-pw").value.trim();
-  const fileInput = document.getElementById("board-file");
-
-  if (!author || !title || !content) {
-    alert("작성자, 제목, 내용은 필수 기입 조건입니다.");
-    return;
-  }
-
-  const now = new Date();
-  const dateStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-
-  const postObj = {
-    author: author,
+  const newPost = {
     title: title,
     content: content,
-    password: password,
-    date: dateStr,
-    fileData: null,
-    fileName: null
+    password: pw,
+    date: new Date().toLocaleString(),
+    fileUrl: null,
+    fileName: ''
   };
 
+  // 첨부파일이 있을 경우 파일 데이터를 Base64로 읽어들임
   if (fileInput.files && fileInput.files[0]) {
     const file = fileInput.files[0];
-    if (file.size > 4 * 1024 * 1024) {
-      alert("파일 크기는 4MB 이하만 지원 가능합니다.");
-      return;
-    }
     const reader = new FileReader();
     reader.onload = function(e) {
-      postObj.fileData = e.target.result;
-      postObj.fileName = file.name;
-      boardPosts.push(postObj);
-      saveBoardPostsToStorage();
-      renderBoardList();
-      closeBoardWrite();
-      alert("게시판에 새 글이 등록되었습니다.");
+      newPost.fileUrl = e.target.result; 
+      newPost.fileName = file.name;
+      saveBoardPost(newPost);
     };
     reader.readAsDataURL(file);
   } else {
-    boardPosts.push(postObj);
-    saveBoardPostsToStorage();
-    renderBoardList();
-    closeBoardWrite();
-    alert("게시판에 새 글이 등록되었습니다.");
+    saveBoardPost(newPost);
   }
 }
 
-function viewBoardPost(index) {
-  const post = boardPosts[index];
-  if (!post) {
-    alert("해당 게시글을 찾을 수 없습니다.");
-    return;
-  }
+// 데이터 저장 및 화면 초기화
+function saveBoardPost(post) {
+  boardData.push(post);
+  localStorage.setItem('class_physics_board', JSON.stringify(boardData));
+  
+  document.getElementById('board-title').value = '';
+  document.getElementById('board-content').value = '';
+  document.getElementById('board-pw').value = '';
+  document.getElementById('board-file').value = '';
+  
+  alert("게시글이 성공적으로 등록되었습니다.");
+  renderBoard();
+}
 
-  // ★ 관리자(최태현 선생님) 로그인 모드일 경우 비밀번호 프로세스 완전 면제 패스
-  if (post.password && post.password.trim() !== "") {
-    if (!adm) {
-      const inputPw = prompt("🔒 비밀글입니다. 설정하신 비밀번호를 입력해주세요:");
-      if (inputPw === null) return; 
-      if (inputPw !== post.password) {
-        alert("비밀번호가 일치하지 않아 열람할 수 없습니다.");
-        return;
-      }
-    }
-  }
-
-  document.getElementById("v-board-title").innerText = post.title;
-  document.getElementById("v-board-author").innerText = post.author;
-  document.getElementById("v-board-date").innerText = post.date;
-  document.getElementById("v-board-content").innerText = post.content;
-
-  const fZone = document.getElementById("v-board-file-zone");
-  const fLink = document.getElementById("v-board-file-link");
-  if (post.fileData && post.fileName) {
-    fZone.style.display = "block";
-    fLink.href = post.fileData;
-    fLink.download = post.fileName;
-    fLink.innerText = post.fileName;
+// 비밀글 열람 비밀번호 체크
+function checkBoardPw(index) {
+  const post = boardData[index];
+  const inputPw = document.getElementById(`pw-check-${index}`).value;
+  
+  if (post.password === inputPw) {
+    document.getElementById(`secret-content-${index}`).style.display = 'block';
   } else {
-    fZone.style.display = "none";
+    alert("비밀번호가 일치하지 않습니다.");
   }
-
-  const delBtn = document.getElementById("v-board-del-btn");
-  delBtn.onclick = function() {
-    if (adm || confirm("이 게시글을 정말로 삭제 처리할까요?")) {
-      if (!adm && post.password) {
-        const checkPw = prompt("본인 확인을 위해 설정 암호를 입력해주세요:");
-        if (checkPw !== post.password) {
-          alert("비밀번호 불일치로 삭제가 취소되었습니다.");
-          return;
-        }
-      }
-      boardPosts.splice(index, 1);
-      saveBoardPostsToStorage();
-      renderBoardList();
-      closeBoardView();
-      alert("글이 정상적으로 삭제되었습니다.");
-    }
-  };
-
-  document.getElementById("v-board-view-modal").classList.add("on");
 }
 
-function closeBoardView() {
-  document.getElementById("v-board-view-modal").classList.remove("on");
+// 게시글 삭제 기능 (관리자 전용)
+function deleteBoardPost(index) {
+  if (confirm("이 게시글을 정말 삭제하시겠습니까?")) {
+    boardData.splice(index, 1);
+    localStorage.setItem('class_physics_board', JSON.stringify(boardData));
+    renderBoard();
+  }
 }
-
-(function(){
-  const p=new URLSearchParams(window.location.search);
-  const sim=p.get("sim");
-  if(sim){setTimeout(()=>{viewItem(sim)},600)}
-  const saved=localStorage.getItem("rp_theme")||"dark";
-  if(document.readyState==="loading"){
-    document.addEventListener("DOMContentLoaded",function(){if(saved==="light")toggleTheme()});
-  }else{if(saved==="light")toggleTheme()}
-  loadBoardPosts();
-})();
 </script>
+<div class="report-bg" id="report-bg" onclick="if(event.target===this)closeReportBox()">
+  <div class="report-box">
+    <div class="report-head">
+      <div>
+        <h3 id="report-title">제작 과정 보고서</h3>
+        <p id="report-desc">공개용 자료입니다.</p>
+      </div>
+      <button class="btn bdanger" onclick="closeReportBox()">✕ 닫기</button>
+    </div>
+    <div class="report-body" id="report-body"></div>
+    <div class="report-foot">
+      <button class="btn" onclick="copyReportBox()">복사</button>
+      <button class="btn" onclick="closeReportBox()">닫기</button>
+    </div>
+  </div>
+</div>
+<div class="prompt-bg" id="prompt-bg" onclick="if(event.target===this)closePromptBox()">
+  <div class="prompt-box">
+    <div class="prompt-head">
+      <div>
+        <h3>공개용 정리 프롬프트</h3>
+        <p>아래 내용을 확인한 뒤 복사해서 생성형 AI 대화창에 붙여넣으세요. 실제 대화 원문은 마지막 부분에 학생이 직접 붙여넣으면 됩니다.</p>
+      </div>
+      <button class="btn bdanger" onclick="closePromptBox()">✕ 닫기</button>
+    </div>
+    <div class="prompt-body" id="prompt-body"></div>
+    <div class="prompt-foot">
+      <button class="btn brun" onclick="copyPublicPromptFromBox()">프롬프트 복사</button>
+      <button class="btn" onclick="closePromptBox()">닫기</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
